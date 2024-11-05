@@ -1,24 +1,42 @@
-import { createContext, useState } from 'react'
-import PRODUCTS from '../products'
+import { createContext, useState, useEffect } from 'react'
+// import PRODUCTS from '../products'
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
 
 export const ShopContext = createContext(null)
 
-const getDefaultCart = () => {
+const getDefaultCart = (productsLength) => {
   let cart = {}
-  for (let i = 1; i < PRODUCTS.length + 1; i++) {
+  for (let i = 1; i < productsLength + 1; i++) {
     cart[i] = 0
   }
   return cart
 }
 
 export const ShopContextProvider = (props) => {
-  const [cartItems, setCartItems] = useState(getDefaultCart())
+  const { data: products, error, isLoading } = useQuery({
+    queryKey: ['products'],
+    queryFn: () => axios.get('http://localhost:5000/api/products').then(res => res.data)
+  })
+
+  // console.log('this is query', data)
+
+  // if (isLoading) return <div>Loading...</div>
+  // if (error) return <div>Error: {error.message}</div>
+
+  const [cartItems, setCartItems] = useState(getDefaultCart(products?.length))
+
+  useEffect(() => {
+    if (products) {
+      setCartItems(getDefaultCart(products.length));
+    }
+  }, [products]);
 
   const getTotalCartAmount = () => {
     let totalAmount = 0
     for (const item in cartItems) {
       if (cartItems[item] > 0) {
-        let itemInfo = PRODUCTS.find((product) => product.id === Number(item))
+        let itemInfo = products.find((product) => product.id === Number(item))
         totalAmount += cartItems[item] * itemInfo.price
       }
     }
@@ -47,14 +65,16 @@ export const ShopContextProvider = (props) => {
     removeFromCart, 
     clearTheCart, 
     updateCartItemCount,
-    getTotalCartAmount
+    getTotalCartAmount,
+    products
    }
 
-  console.log(cartItems)
+  // console.log(cartItems)
+  // console.log('Current Cart Items:', cartItems);
 
   return (
     <ShopContext.Provider value={contextValue}>
-      {props.children}
+      {isLoading ? <div>Loading...</div> : error ? <div>Error: {error.message}</div> : props.children}
     </ShopContext.Provider>
   )
 }

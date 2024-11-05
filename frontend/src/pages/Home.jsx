@@ -30,7 +30,7 @@ const Home = () => {
         }}
       >
         <video
-          src="./src/assets/videoplayback.mp4" // Adjust the path as necessary
+          src="/assets/videoplayback.mp4" // Adjust the path as necessary
           autoPlay
           loop
           muted
@@ -44,12 +44,12 @@ const Home = () => {
 
       {/* Main Content */}
       <Typography variant="h2" gutterBottom>
-        Welcome to Our E-Commerce Store
+        Welcome to Our Chocolate Store!
       </Typography>
       <Typography variant="h5" color="inherit" paragraph>
-        Discover the best products curated just for you.
+        Discover the best chocolate
       </Typography>
-      <Button variant="contained" color="primary" size="large" href="/products">
+      <Button variant="contained" color="primary" size="large" href="/shop">
         Shop Now
       </Button>
     </Container>

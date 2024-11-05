@@ -5,12 +5,24 @@ import Product from '../shop/Product'
 import CartItem from "./CartItem"
 import "./cart.css"
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
 
 const Cart = () => {
   const navigate = useNavigate()
-  const { cartItems, getTotalCartAmount } = useContext(ShopContext)
+  const { cartItems, getTotalCartAmount, products } = useContext(ShopContext)
   const totalAmount = getTotalCartAmount()
-  console.log('cart', cartItems)
+  // console.log('cart', cartItems)
+
+  // const { data, error, isLoading } = useQuery({
+  //   queryKey: ['products'],
+  //   queryFn: () => axios.get('http://localhost:5000/api/products').then(res => res.data)
+  // })
+
+  // console.log('this is query', data)
+
+  // if (isLoading) return <div>Loading...</div>
+  // if (error) return <div>Error: {error.message}</div>
   
   return (
     <div className="cart">
@@ -18,11 +30,12 @@ const Cart = () => {
         <h1>Your Cart Items</h1>
       </div>
       <div className="cartItems">
-        {PRODUCTS.map((product) => {
-          const productQuantity = cartItems[product.id]
+        {products?.map((product) => {
+          const productQuantity = cartItems[product.id] || 0
           if (productQuantity > 0) {
             return <CartItem key={product.id} data={product} />
           }
+          return null
         })}
       </div>
       {totalAmount > 0 ? (
