@@ -7,19 +7,55 @@ const typeDefs = gql`
     name: String!
     createdAt: String
     updatedAt: String
+  } 
+  
+  type Product {
+  id: ID!
+  name: String!
+  image: String!
+  description: String!
+  price: Int!
   }
 
-  type Query {
-    users: [User!]!
+  type CartItem {
+      productId: ID!
+      quantity: Int!
+  }
+
+  input CartItemInput { 
+    productId: ID!
+    quantity: Int!
   }
 
   type Token {
     value: String!  
   }
 
+  type AuthPayload {
+  user: User!
+  token: String!
+  }
+
+  type Query {
+    users: [User!]!
+    getUserCart(userId: ID!): [CartItem]
+    getProducts: [Product]
+  }
+
+  type CartUpdateResponse {
+  message: String!
+  errors: [FieldError!]
+  }
+
+  type FieldError {
+  field: String!
+  message: String!
+  }
+
   type Mutation {
     createUser(username: String!, name: String!, password: String!): User!
-    login(username: String!, password: String!): Token
+    login(username: String!, password: String!): AuthPayload!
+    updateUserCart(userId: ID!, cart: [CartItemInput!]!) : CartUpdateResponse!
   }
 `;
 

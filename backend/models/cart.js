@@ -11,7 +11,7 @@ Cart.init({
     autoIncrement: true
   },
   userId: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'users',
@@ -19,7 +19,7 @@ Cart.init({
     }
   },
   productId: {
-    type: DataTypes: INTEGER,
+    type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'products',
@@ -38,4 +38,4 @@ Cart.init({
   modelName: 'cart'
 })
 
-module.exports = User
+module.exports = Cart

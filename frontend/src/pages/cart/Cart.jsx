@@ -12,31 +12,24 @@ const Cart = () => {
   const navigate = useNavigate()
   const { cartItems, getTotalCartAmount, products } = useContext(ShopContext)
   const totalAmount = getTotalCartAmount()
-  // console.log('cart', cartItems)
 
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ['products'],
-  //   queryFn: () => axios.get('http://localhost:5000/api/products').then(res => res.data)
-  // })
-
-  // console.log('this is query', data)
-
-  // if (isLoading) return <div>Loading...</div>
-  // if (error) return <div>Error: {error.message}</div>
-  
   return (
     <div className="cart">
       <div>
         <h1>Your Cart Items</h1>
       </div>
       <div className="cartItems">
-        {products?.map((product) => {
-          const productQuantity = cartItems[product.id] || 0
-          if (productQuantity > 0) {
-            return <CartItem key={product.id} data={product} />
-          }
-          return null
-        })}
+        {products?.length > 0 ? (
+          products.map((product) => {
+            const productQuantity = cartItems[product.id] || 0;
+            if (productQuantity > 0) {
+              return <CartItem key={product.id} data={product} />;
+            }
+            return null;
+          })
+        ) : (
+          <div>Loading products...</div>
+        )}
       </div>
       {totalAmount > 0 ? (
         <div className="checkout">

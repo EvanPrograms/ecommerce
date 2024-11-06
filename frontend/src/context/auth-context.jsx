@@ -7,6 +7,7 @@ export const AuthContext = createContext(null);
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null)
   const client = useApolloClient();
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const login = (userData, token) => {
     setUser(userData);
+    setToken(token)
     localStorage.setItem('user-token', token);
   };
 
@@ -41,7 +43,8 @@ export const AuthContextProvider = ({ children }) => {
   const contextValue = { 
    user,
    login,
-   logout
+   logout,
+   token
    }
 
   return (

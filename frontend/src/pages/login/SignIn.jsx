@@ -9,20 +9,8 @@ import { useMutation } from "@apollo/client";
 
 const SignIn = () => {
   const { login: authLogin } = useContext(AuthContext)
-  // const [ login, { data, error, loading } ] = useMutation(LOGIN_USER)
   const [loginMutation, { loading, error }] = useMutation(LOGIN_USER);
 
-  // useEffect(() => {
-  //   if (data && data.login) {
-  //     console.log('Mutation successful:', data)
-  //     const token = data.login.value
-  //     localStorage.setItem('user-token', token)
-  //     authLogin(token)
-  //   }
-  //   if (error) {
-  //     console.error("Login Failed:", error.message)
-  //   }
-  // }, [data, error, authLogin])
 
   const handleSignIn = async (values) => {
     const { username, password } = values;
@@ -30,10 +18,10 @@ const SignIn = () => {
       const { data } = await loginMutation({ variables: { username, password } });
       if (data && data.login) {
         console.log("Mutation response:", data);
-        const token = data.login.value;
-        localStorage.setItem('user-token', token)
+        const token = data.login.token;
         const user = data.login.user
-        authLogin(token); // Pass both user data and token
+        localStorage.setItem('user-token', token)
+        authLogin(user, token); // Pass both user data and token
       }
     } catch (error) {
       console.error("Login attempt failed:", error);

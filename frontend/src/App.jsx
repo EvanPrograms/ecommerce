@@ -13,8 +13,8 @@ import { AuthContextProvider } from './context/auth-context'
 const App = () => {
   
   return (
-    <ShopContextProvider>
-      <AuthContextProvider>
+    <AuthContextProvider>
+      <ShopContextProvider> 
         <Router>
           {location.pathname !== '/' && <Navbar />}
           <Routes>
@@ -27,8 +27,8 @@ const App = () => {
             {/* <Route path="/checkout" element={<Checkout />} /> */}
           </Routes>
         </Router>
-      </AuthContextProvider>
-    </ShopContextProvider>
+      </ShopContextProvider>
+    </AuthContextProvider>
   );
 }
 

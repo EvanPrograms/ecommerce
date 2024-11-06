@@ -32,7 +32,7 @@ const CartItem = (props) => {
         <p>
           <b>{name}</b>
         </p>
-        <p>Item total ${((price * cartItems[id])/100).toFixed(2)}</p>
+        <p>Item total ${((Number(price) * cartItems[id])/100).toFixed(2)}</p>
         <div className="countHandler">
           <button onClick={() => removeFromCart(id)}> - </button> 
           <input 

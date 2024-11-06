@@ -16,18 +16,7 @@ const SignUp = () => {
   const [createUser, { error }] = useMutation(CREATE_USER)
   
   const [ login, { data: loginData, error: loginError } ] = useMutation(LOGIN_USER)
-  
-  // useEffect(() => {
-  //   if (loginData && loginData.login) {
-  //     console.log('Mutation successful:', loginData)
-  //     const token = loginData.login.value
-  //     localStorage.setItem('user-token', token)
-  //     authLogin(token)
-  //   }
-  //   if (loginError) {
-  //     console.error("Login Failed:", loginError.message)
-  //   }
-  // }, [loginData, loginError, authLogin])
+
 
   
   const signUpValidationSchema = Yup.object({
@@ -43,9 +32,9 @@ const SignUp = () => {
       const { data: loginData } = await login({ variables: values });
       if (loginData && loginData.login) {
         console.log("Mutation response:", loginData);
-        const token = loginData.login.value;
+        const token = loginData.login.token;
         const user = loginData.login.user; // Assuming user data is available
-        authLogin(token); // Pass user data and token to context
+        authLogin(user, token); // Pass user data and token to context
         localStorage.setItem('user-token', token); // Store token
         navigate('/shop'); // Redirect after login
       }

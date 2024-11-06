@@ -10,15 +10,6 @@ import { useContext } from 'react';
 import { ShopContext } from '../../context/shop-context';
 
 const Products = () => {
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ['products'],
-  //   queryFn: () => axios.get('http://localhost:5000/api/products').then(res => res.data)
-  // })
-
-  // console.log('this is query', data)
-
-  // if (isLoading) return <div>Loading...</div>
-  // if (error) return <div>Error: {error.message}</div>
   const { products, isLoading, error } = useContext(ShopContext); // Access products from context
 
   if (isLoading) return <div>Loading...</div>;

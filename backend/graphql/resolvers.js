@@ -1,4 +1,4 @@
-const { User } = require('../models/')
+const { User, Cart, Product } = require('../models/')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
@@ -7,6 +7,20 @@ const resolvers = {
     users: async () => {
       return await User.findAll(); // Fetch all users from the database
     },
+    getUserCart: async (_, { userId }) => {
+      const cartItems = await Cart.findAll({
+        where: { userId },
+        include: [Product]
+      })
+
+      return cartItems.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity
+      }))
+    },
+    getProducts: async () => {
+      return await Product.findAll();
+    }
   },
   Mutation: {
     createUser: async (_, { username, name, password }) => {
@@ -42,7 +56,32 @@ const resolvers = {
 
       const token = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET)
 
-      return { value: token }
+      return { user, token }
+    },
+    updateUserCart: async (_, { userId, cart }) => {
+      // Iterate through each item in the cart
+      for (const item of cart) {
+        const { productId, quantity } = item;
+    
+        // Check if the cart item already exists for this user and product
+        const existingCartItem = await Cart.findOne({
+          where: { userId, productId }
+        });
+    
+        if (existingCartItem) {
+          // If it exists, update the quantity
+          await existingCartItem.update({ quantity });
+        } else {
+          // If it doesn't exist, create a new cart entry
+          await Cart.create({
+            userId,
+            productId,
+            quantity,
+          });
+        }
+      }
+    
+      return { message: "Cart updated successfully" };
     }
   },
 };
