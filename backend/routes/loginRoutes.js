@@ -3,13 +3,13 @@ const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
-const SECRET = process.env.SECRET
+const JWT_SECRET = process.env.JWT_SECRET
 
 router.post('/', async (request, response) => {
   const { username, password } = request.body 
 
   try {
-    const user = await findOne({ where: { username } })
+    const user = await User.findOne({ where: { username } })
 
     const passwordCorrect = user 
     ? await bcrypt.compare(password, user.passwordHash) 
@@ -24,7 +24,7 @@ router.post('/', async (request, response) => {
       id: user.id,
     }
 
-    const token = jwt.sign(userForToken, SECRET)
+    const token = jwt.sign(userForToken, JWT_SECRET)
 
     response.status(200).send({ token, username: user.username, name: user.name })
   } catch (error) {

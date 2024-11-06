@@ -40,6 +40,7 @@ const typeDefs = gql`
     users: [User!]!
     getUserCart(userId: ID!): [CartItem]
     getProducts: [Product]
+    me: User
   }
 
   type CartUpdateResponse {

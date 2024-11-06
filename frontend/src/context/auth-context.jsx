@@ -9,12 +9,14 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null)
   const client = useApolloClient();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Check for token on initial load
     const token = localStorage.getItem('user-token');
-    if (token) {
+    if (token && !loading) {
       // Set user if token exists
+      setLoading(true)
       client.query({ query: GET_USER })
         .then(({ data}) => {
           if (data && data.me) {
@@ -25,8 +27,9 @@ export const AuthContextProvider = ({ children }) => {
         console.error("Error fetching user data:", error)
         logout()
       })
+      .finally(() => setLoading(false))
     }
-  }, [client]);
+  }, [client, loading]);
 
   const login = (userData, token) => {
     setUser(userData);
@@ -36,6 +39,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    setToken(null)
     localStorage.removeItem('user-token');
     client.resetStore();
   };

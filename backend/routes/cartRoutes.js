@@ -1,7 +1,7 @@
 const express = require('express');
-const { Sequelize, QueryTypes } = require('sequelize');
 const router = express.Router();
 const { sequelize } = require('../config/db');
+const jwt = require('jsonwebtoken')
 
 let cart = {}
 
@@ -11,6 +11,9 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { cartItems } = req.body
+
+  
+
   Object.keys(cartItems).forEach(id => {
     cart[id] = cartItems[id]
   })

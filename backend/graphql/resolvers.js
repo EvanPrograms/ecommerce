@@ -2,6 +2,8 @@ const { User, Cart, Product } = require('../models/')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
+const JWT_SECRET = process.env.JWT_SECRET
+
 const resolvers = {
   Query: {
     users: async () => {
@@ -20,6 +22,9 @@ const resolvers = {
     },
     getProducts: async () => {
       return await Product.findAll();
+    },
+    me: (root, args, context) => {
+      return context.currentUser
     }
   },
   Mutation: {
@@ -54,12 +59,21 @@ const resolvers = {
         throw new Error('Invalid Password')
       }
 
-      const token = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET)
+      const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET)
 
       return { user, token }
     },
-    updateUserCart: async (_, { userId, cart }) => {
+    updateUserCart: async (_, { userId, cart }, context) => {
       // Iterate through each item in the cart
+      const currentUser = context.currentUser
+      if (!currentUser) {
+        throw new Error('not authenticated')
+      }
+
+      if (parseInt(context.currentUser.id, 10) !== parseInt(userId, 10)) {
+        throw new Error('Unauthorized to update this cart')
+      }
+
       for (const item of cart) {
         const { productId, quantity } = item;
     

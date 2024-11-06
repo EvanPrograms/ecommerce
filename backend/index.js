@@ -1,7 +1,7 @@
 // index.js
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
 const productsRouter = require('./routes/productRoutes')
 const cartRouter = require('./routes/cartRoutes')
 const usersRouter = require('./routes/userRoutes')
@@ -10,8 +10,27 @@ const { connectToDatabase } = require('./config/db')
 const { ApolloServer } = require('apollo-server-express')
 const typeDefs = require('./graphql/schema')
 const resolvers = require('./graphql/resolvers')
+const User = require('./models/user')
+const jwt = require('jsonwebtoken')
 
-const server = new ApolloServer({ typeDefs, resolvers })
+const JWT_SECRET = process.env.JWT_SECRET
+
+const server = new ApolloServer({ 
+  typeDefs, 
+  resolvers, 
+  context: async ({ req }) => {
+  const auth = req ? req.headers.authorization : null;
+    if (auth && auth.startsWith('Bearer ')) {
+      try {
+        const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+        const currentUser = await User.findByPk(decodedToken.id)
+        return { currentUser };
+      } catch (error) {
+        console.error('Token verification error:', error);
+      }
+    }
+  } 
+})
 const app = express();
 const PORT = process.env.PORT || 5000;
 
