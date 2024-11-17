@@ -67,7 +67,7 @@ const SignIn = () => {
             <ErrorMessage name="password" component="div" />
           </div>
           <button type="submit">Sign In</button>
-          <button onClick={handleForgotPassword}>Forgot Password?</button>
+          <button type="button" onClick={handleForgotPassword}>Forgot Password?</button>
         </Form>
       </Formik>
     </div>

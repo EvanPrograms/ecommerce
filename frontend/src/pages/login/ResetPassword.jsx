@@ -12,13 +12,12 @@ const ResetPassword = () => {
   const navigate = useNavigate()
 
   const signUpValidationSchema = Yup.object({
-    email: Yup.string().required('Email is required')
+    email: Yup.string().email('invalid email').required('Email is required')
   });
 
   const handleForgotPassword = async (values) => {
     try {
       await forgotPassword({ variables: { email: values.email } })
-      // navigate('/resetpasswordform')
       console.log('password reset link sent')
     } catch (error) {
       console.log('Error requesting password change', error.message)
@@ -30,9 +29,11 @@ const ResetPassword = () => {
     <Formik
       initialValues={{ email: '' }}
       validationSchema={signUpValidationSchema}
-      onSubmit={(values) => handleForgotPassword(values)}
+      onSubmit={(values) => {
+        handleForgotPassword(values)
+      }}
     >
-      <Form>
+      <Form autoComplete="off">
         <div>
           <label htmlFor="email">Email</label>
           <Field name="email" type="text" />
