@@ -5,17 +5,19 @@ import axios from 'axios'
 import { LOGIN_USER } from '../../../graphql/mutations'
 import { AuthContext } from '../../context/auth-context'
 import { useMutation } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
 
 
 const SignIn = () => {
   const { login: authLogin } = useContext(AuthContext)
   const [loginMutation, { loading, error }] = useMutation(LOGIN_USER);
+  const navigate = useNavigate()
 
 
   const handleSignIn = async (values) => {
-    const { username, password } = values;
+    const { email, password } = values;
     try {
-      const { data } = await loginMutation({ variables: { username, password } });
+      const { data } = await loginMutation({ variables: { email, password } });
       if (data && data.login) {
         console.log("Mutation response:", data);
         const token = data.login.token;
@@ -28,8 +30,13 @@ const SignIn = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    navigate('/resetpassword')
+
+  }
+
   const signInValidationSchema = Yup.object({
-    username: Yup.string().required('Username is required'),
+    email: Yup.string().required('Email is required'),
     password: Yup.string().required('Password is required')
   })
 
@@ -44,15 +51,15 @@ const SignIn = () => {
   return (
     <div className="form">
       <Formik
-      initialValues={{ username: '', password: '' }}
+      initialValues={{ email: '', password: '' }}
       validationSchema={signInValidationSchema}
       onSubmit={handleSignIn}
       >
         <Form>
           <div>
-            <label htmlFor="username">Username</label>
-            <Field name="username" type="text" autoComplete="username"/>
-            <ErrorMessage name="username" component="div" />
+            <label htmlFor="email">Email</label>
+            <Field name="email" type="text" autoComplete="email"/>
+            <ErrorMessage name="email" component="div" />
           </div>
           <div>
             <label htmlFor="password">Password</label>
@@ -60,6 +67,7 @@ const SignIn = () => {
             <ErrorMessage name="password" component="div" />
           </div>
           <button type="submit">Sign In</button>
+          <button onClick={handleForgotPassword}>Forgot Password?</button>
         </Form>
       </Formik>
     </div>

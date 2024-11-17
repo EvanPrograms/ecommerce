@@ -1,8 +1,11 @@
 const { User, Cart, Product } = require('../models/')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
 
 const JWT_SECRET = process.env.JWT_SECRET
+const CHOCOLATE_SHOP_EMAIL = process.env.CHOCOLATE_SHOP_EMAIL
+const CHOCOLATE_SHOP_EMAIL_PASSWORD = process.env.CHOCOLATE_SHOP_EMAIL_PASSWORD
 
 const resolvers = {
   Query: {
@@ -28,11 +31,11 @@ const resolvers = {
     }
   },
   Mutation: {
-    createUser: async (_, { username, name, password }) => {
-      // Check for unique username
-      const existingUser = await User.findOne({ where: { username } });
+    createUser: async (_, { email, name, password }) => {
+      // Check for unique email
+      const existingUser = await User.findOne({ where: { email } });
       if (existingUser) {
-        throw new Error('Username must be unique');
+        throw new Error('Email already in use');
       }
 
       // Hash password
@@ -41,15 +44,15 @@ const resolvers = {
 
       // Create user in the database
       const user = await User.create({
-        username,
+        email,
         name,
         passwordHash,
       });
 
       return user;
     },
-    login: async (_, { username, password }) => {
-      const user = await User.findOne({ where: { username }})
+    login: async (_, { email, password }) => {
+      const user = await User.findOne({ where: { email }})
       if (!user) {
         throw new Error('User not found')
       }
@@ -59,7 +62,7 @@ const resolvers = {
         throw new Error('Invalid Password')
       }
 
-      const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET)
+      const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET)
 
       return { user, token }
     },
@@ -96,6 +99,64 @@ const resolvers = {
       }
     
       return { message: "Cart updated successfully" };
+    },
+    requestPasswordReset: async (_, { email }) => {
+      const user = await User.findOne({ where: { email }})
+      if (!user) throw new Error('User not found')
+      const secret = JWT_SECRET + user.passwordHash
+      const token = jwt.sign({ email: user.email, id: user.id }, secret, { expiresIn: '5m'})
+
+      const resetURL = `http://localhost:5173/resetpasswordform?userId=${user.id}&token=${token}`;
+      console.log('Generated Reset URL:', resetURL);
+
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        // port: 587,
+        // secure: false, // upgrade later with STARTTLS
+        auth: {
+          user: CHOCOLATE_SHOP_EMAIL,
+          pass: CHOCOLATE_SHOP_EMAIL_PASSWORD,
+        },
+      });
+
+      const message = {
+        from: CHOCOLATE_SHOP_EMAIL,
+        to: user.email,
+        subject: "Password Reset Link for Chocolate Shop",
+        text: `Please click the following link to reset your password ${resetURL}`,
+        html: `<p>Please click the following link in html to reset your password ${resetURL}</p>`,
+      };
+
+      transporter.sendMail(message, function(error, info) {
+        if (error) {
+          console.log(error)
+        } else {
+          console.log('Email sent: ' + info.response)
+        }
+      })
+
+      return true;
+    },
+    resetPassword: async (_, { userId, token, newPassword }) => {
+      const user = await User.findByPk(userId);
+      if (!user) {
+        throw new Error('User not found')
+      }
+
+      const secret = JWT_SECRET + user.passwordHash
+      try {
+        jwt.verify(token, secret)
+        console.log('token verified successfully')
+      } catch (error) {
+        throw new Error('Invalid or expired token')
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10)
+      console.log('new hashed password: ', hashedPassword)
+      await user.update({ passwordHash: hashedPassword})
+      console.log('Password updated successfully')
+
+      return true
     }
   },
 };

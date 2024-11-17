@@ -5,7 +5,7 @@ export const GET_USER = gql`
   query GetUser {
   me {
     id
-    username
+    email
     name
     }
   }
@@ -42,13 +42,13 @@ export const UPDATE_USER_CART = gql`
       }
     }
   }  
-`
+`;
 
 export const CREATE_USER = gql`
-  mutation CreateUser($username: String!, $name: String!, $password: String!) {
-    createUser(username: $username, name: $name, password: $password) {
+  mutation CreateUser($email: String!, $name: String!, $password: String!) {
+    createUser(email: $email, name: $name, password: $password) {
       id
-      username
+      email
       name
       createdAt
       updatedAt
@@ -57,14 +57,26 @@ export const CREATE_USER = gql`
 `;
 
 export const LOGIN_USER = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
       user {
         id
-        username
+        email
         name
       }
       token
     }  
+  }
+`;
+
+export const FORGOT_PASSWORD = gql`
+  mutation RequestPasswordReset($email: String!) {
+    requestPasswordReset(email: $email)
+  }
+`;
+
+export const RESET_PASSWORD = gql`
+  mutation ResetPassword($userId: ID!, $token: String!, $newPassword: String!) {
+    resetPassword(userId: $userId, token: $token, newPassword: $newPassword)
   }
 `;

@@ -6,6 +6,9 @@ import Cart from './pages/cart/Cart';
 import AuthPage from './pages/login/AuthPage'
 import SignUp from './pages/login/SignUp';
 import Navbar from './components/navbar'
+import ResetPassword from './pages/login/ResetPassword';
+import ResetPasswordSubmission from './pages/login/ResetPasswordSubmission';
+
 import { ShopContextProvider } from './context/shop-context';
 import { AuthContextProvider } from './context/auth-context'
 // import Checkout from './pages/Checkout';
@@ -24,6 +27,8 @@ const App = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="resetpassword" element={<ResetPassword />} />
+            <Route path="resetpasswordform" element={<ResetPasswordSubmission />} />
             {/* <Route path="/checkout" element={<Checkout />} /> */}
           </Routes>
         </Router>

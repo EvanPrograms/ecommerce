@@ -8,13 +8,13 @@ usersRouter.get('/', async (req, res) => {
 })
 
 usersRouter.post('/', async (request, response) => {
-  const { username, name, password } = request.body
+  const { email, name, password } = request.body
 
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
 
   const user = new User({
-    username,
+    email,
     name,
     passwordHash,
   })
@@ -25,7 +25,7 @@ usersRouter.post('/', async (request, response) => {
   } catch (error) {
     if (error.name === 'SequelizeUniqueConstraintError') {
       // Handle unique constraint error
-      return response.status(409).json({ error: 'Username must be unique' });
+      return response.status(409).json({ error: 'Email must be unique' });
     }
 
     // Log the error and return a generic error response

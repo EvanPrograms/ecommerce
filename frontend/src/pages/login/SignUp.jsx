@@ -20,7 +20,7 @@ const SignUp = () => {
 
   
   const signUpValidationSchema = Yup.object({
-    username: Yup.string().required('Username is required'),
+    email: Yup.string().required('Email is required'),
     name: Yup.string().required('Name is required'),
     password: Yup.string().required('Password is required'),
   });
@@ -57,15 +57,15 @@ const SignUp = () => {
 
   return (
     <Formik
-      initialValues={{ username: '', name: '', password: '' }}
+      initialValues={{ email: '', name: '', password: '' }}
       validationSchema={signUpValidationSchema}
       onSubmit={handleSignUp}
     >
       <Form>
         <div>
-          <label htmlFor="username">Username</label>
-          <Field name="username" type="text" />
-          <ErrorMessage name="username" component="div" />
+          <label htmlFor="email">Email</label>
+          <Field name="email" type="text" />
+          <ErrorMessage name="email" component="div" />
         </div>
         <div>
           <label htmlFor="name">Name</label>
