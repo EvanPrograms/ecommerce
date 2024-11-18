@@ -112,7 +112,8 @@ export const ShopContextProvider = (props) => {
 
   const handleCartChange = (itemId, change) => {
     setCartItems(prev => {
-      const newCart = { ...prev, [itemId]: prev[itemId] + change };
+      const newQuantity = (prev[itemId] || 0) + change; // Ensure no NaN
+      const newCart = { ...prev, [itemId]: Math.max(newQuantity, 0) };
       updateCart(newCart);
       return newCart;
     });
@@ -125,10 +126,19 @@ export const ShopContextProvider = (props) => {
         variables: { userId: user.id },
         fetchPolicy: "network-only", // Ensures fresh data is fetched
       });
-      setCartItems(data.getUserCart.reduce((acc, item) => {
+      console.log('Refetched cart data:', data.getUserCart);
+
+      const newCart = data.getUserCart.reduce((acc, item) => {
         acc[item.productId] = item.quantity;
         return acc;
-      }, {}));
+      }, {});
+      if (Object.keys(newCart).length === 0) {
+        setCartItems(getDefaultCart(products?.length));
+      } else {
+        setCartItems(newCart);
+      }
+    } else {
+      setCartItems(getDefaultCart(products?.length))
     }
   };
 

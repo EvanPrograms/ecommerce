@@ -8,7 +8,7 @@ import { ShopContext } from '../../context/shop-context'
 const Success = () => {
   const { randomValue } = useParams()
   const [validateSuccess] = useMutation(VALIDATE_SUCCESS)
-  const { refetchCart } = useContext(ShopContext)
+  const { refetchCart, cartItems } = useContext(ShopContext)
 
   useEffect(() => {
     const handleValidation = async () => {
@@ -16,6 +16,7 @@ const Success = () => {
         const response = await validateSuccess({ variables: { randomValue } })
         console.log("Validation successful and Cart cleared:", response.data.validateSuccess.success);
         await refetchCart()
+        console.log('Cart items after refetch:', cartItems);
       } catch(error) {
         console.error('Error clearing cart: ', error)
       }
