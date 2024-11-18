@@ -181,11 +181,17 @@ const resolvers = {
           cancel_url: `${DOMAIN}/cancel`, 
         })
 
-        await CheckoutSession.create({
-          randomValue,
-          sessionId: session.id,
-          userId: context.currentUser.id
-        })
+        if (context.currentUser) {
+          await CheckoutSession.create({
+            randomValue,
+            sessionId: session.id,
+            userId: context.currentUser.id
+          })
+        } else {
+          console.log('Guest checkout session created: ', session.id)
+        }
+
+        
 
         return { url: session.url }
       } catch (error) {
@@ -209,11 +215,6 @@ const resolvers = {
       }
     },
     validateSuccess: async (_, { randomValue }, context) => {
-      console.log('randomValue:', randomValue);
-      console.log('currentUser:', context.currentUser);
-      if (!context.currentUser) {
-        throw new Error('Not authenticated')
-      }
 
       const sessionData = await CheckoutSession.findOne({
         where: { randomValue, userId: context.currentUser.id }
@@ -223,13 +224,19 @@ const resolvers = {
         throw new Error('Invalid or expired success link')
       }
 
+      const userType = sessionData.userId ? 'authenticated' : 'guest'
+
+      if (userType === 'authenticated' && context.currentUser?.id === sessionData.userId) {
+        await Cart.destroy({
+          where: { userId: context.currentUser.id },
+        });
+      } else if (userType === 'authenticated') {
+        throw new Error('Not authenticated')
+      }
+
       await CheckoutSession.destroy({ where: { randomValue }})
 
-      await Cart.destroy({
-        where: { userId: context.currentUser.id },
-      });
-
-      return { success: true }
+      return { success: true, userType }
     }
   },
 };

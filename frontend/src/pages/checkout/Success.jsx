@@ -1,37 +1,50 @@
-import React, { useEffect, useContext } from "react";
-import { useMutation, useQuery } from "@apollo/client";
-import { CLEAR_CART, VALIDATE_SUCCESS, GET_USER_CART } from "../../../graphql/mutations";
-import { useParams } from "react-router-dom";
-import { ShopContext } from '../../context/shop-context'
-
+import React, { useEffect, useContext, useRef } from "react";
+import { useMutation } from "@apollo/client";
+import { VALIDATE_SUCCESS } from "../../../graphql/mutations";
+import { useParams, useNavigate } from "react-router-dom";
+import { ShopContext, getDefaultCart } from '../../context/shop-context';
 
 const Success = () => {
-  const { randomValue } = useParams()
-  const [validateSuccess] = useMutation(VALIDATE_SUCCESS)
-  const { refetchCart, cartItems } = useContext(ShopContext)
+  const { randomValue } = useParams();
+  const [validateSuccess] = useMutation(VALIDATE_SUCCESS);
+  const { refetchCart, setCartItems, products } = useContext(ShopContext);
+  const navigate = useNavigate();
+  const hasValidated = useRef(false);
 
   useEffect(() => {
     const handleValidation = async () => {
+      if (hasValidated.current) return; // Prevent multiple calls
+      hasValidated.current = true;
+
       try {
-        const response = await validateSuccess({ variables: { randomValue } })
+        const response = await validateSuccess({ variables: { randomValue } });
         console.log("Validation successful and Cart cleared:", response.data.validateSuccess.success);
-        await refetchCart()
-        console.log('Cart items after refetch:', cartItems);
-      } catch(error) {
-        console.error('Error clearing cart: ', error)
+        setCartItems(getDefaultCart(products?.length))
+        // Only refetch cart if the user is authenticated
+        if (response.data.validateSuccess.userType !== "guest") {
+          await refetchCart();
+        } else {
+          console.log("Guest checkout, no cart to refetch.");
+        }
+      } catch (error) {
+        if (error.message.includes('Cannot read properties of undefined')) {
+          console.error('Guest checkout with no user ID, treating as guest')
+        } else {
+          console.error("Validation Failed:", error);
+          navigate("/not-found", { replace: true })
+        }
+        
       }
-    }
+    };
 
-    handleValidation()
-  }, [randomValue, validateSuccess, refetchCart])
+    handleValidation();
+  }, [randomValue, validateSuccess, refetchCart]);
 
-  return(
+  return (
     <div>
-      <p>
-        We appreciate your business! Thanks for your order
-      </p>
+      <p>We appreciate your business! Thanks for your order</p>
     </div>
-  )
-}
+  );
+};
 
-export default Success
+export default Success;

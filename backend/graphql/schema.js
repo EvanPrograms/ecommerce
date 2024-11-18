@@ -65,7 +65,8 @@ const typeDefs = gql`
   }
 
   type ValidateSuccessResponse {
-  success: Boolean!
+    success: Boolean!
+    userType: String!
   }
 
   type Mutation {

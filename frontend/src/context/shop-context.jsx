@@ -12,7 +12,7 @@ import {
 
 export const ShopContext = createContext(null)
 
-const getDefaultCart = (productsLength) => {
+export const getDefaultCart = (productsLength) => {
   let cart = {}
   for (let i = 1; i < productsLength + 1; i++) {
     cart[i] = 0
@@ -121,24 +121,28 @@ export const ShopContextProvider = (props) => {
 
   const refetchCart = async () => {
     if (user?.id) {
-      const { data } = await client.query({
-        query: GET_USER_CART,
-        variables: { userId: user.id },
-        fetchPolicy: "network-only", // Ensures fresh data is fetched
-      });
-      console.log('Refetched cart data:', data.getUserCart);
-
-      const newCart = data.getUserCart.reduce((acc, item) => {
-        acc[item.productId] = item.quantity;
-        return acc;
-      }, {});
-      if (Object.keys(newCart).length === 0) {
-        setCartItems(getDefaultCart(products?.length));
-      } else {
-        setCartItems(newCart);
+      try {
+        const { data } = await client.query({
+          query: GET_USER_CART,
+          variables: { userId: user.id },
+          fetchPolicy: "network-only", // Ensures fresh data is fetched
+        });
+  
+        const newCart = data.getUserCart.reduce((acc, item) => {
+          acc[item.productId] = item.quantity;
+          return acc;
+        }, {});
+  
+        // Reset to getDefaultCart if the cart is empty
+        setCartItems(Object.keys(newCart).length > 0 ? newCart : getDefaultCart(products?.length || 0));
+      } catch (error) {
+        console.error("Error refetching cart:", error);
+        // On error, reset to getDefaultCart
+        setCartItems(getDefaultCart(products?.length || 0));
       }
     } else {
-      setCartItems(getDefaultCart(products?.length))
+      // Reset to getDefaultCart for non-authenticated users
+      setCartItems(getDefaultCart(products?.length || 0));
     }
   };
 
@@ -228,6 +232,7 @@ export const ShopContextProvider = (props) => {
     updateCartItemCount: (newAmount, itemId) => handleCartChange(itemId, newAmount - cartItems[itemId]),
     getTotalCartAmount,
     refetchCart,
+    setCartItems,
     products
    }
 
@@ -240,4 +245,4 @@ export const ShopContextProvider = (props) => {
     </ShopContext.Provider>
   )
 }
-
+ 
