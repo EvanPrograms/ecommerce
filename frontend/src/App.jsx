@@ -5,6 +5,8 @@ import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/cart/Cart';
 import AuthPage from './pages/login/AuthPage'
 import SignUp from './pages/login/SignUp';
+import Success from './pages/checkout/success';
+import Cancel from './pages/checkout/Cancel';
 import Navbar from './components/navbar'
 import ResetPassword from './pages/login/ResetPassword';
 import ResetPasswordSubmission from './pages/login/ResetPasswordSubmission';
@@ -29,6 +31,8 @@ const App = () => {
             <Route path="/signup" element={<SignUp />} />
             <Route path="resetpassword" element={<ResetPassword />} />
             <Route path="resetpasswordform" element={<ResetPasswordSubmission />} />
+            <Route path="/success/:randomValue" element={<Success />} />
+            <Route path="/cancel" element={<Cancel />} />
             {/* <Route path="/checkout" element={<Checkout />} /> */}
           </Routes>
         </Router>

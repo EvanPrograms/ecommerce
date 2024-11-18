@@ -6,6 +6,7 @@ const productsRouter = require('./routes/productRoutes')
 const cartRouter = require('./routes/cartRoutes')
 const usersRouter = require('./routes/userRoutes')
 const loginRouter = require('./routes/loginRoutes')
+const stripeRouter = require('./routes/stripeRoutes')
 const { connectToDatabase } = require('./config/db')
 const { ApolloServer } = require('apollo-server-express')
 const typeDefs = require('./graphql/schema')
@@ -43,6 +44,7 @@ app.use(cors());
 // app.use('/api/cart', cartRouter)
 // app.use('/api/users', usersRouter)
 // app.use('/api/login', loginRouter)
+// app.use('/api/checkout', stripeRouter)
 
 
 

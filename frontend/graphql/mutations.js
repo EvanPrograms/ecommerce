@@ -3,10 +3,10 @@ import { gql } from '@apollo/client';
 
 export const GET_USER = gql`
   query GetUser {
-  me {
-    id
-    email
-    name
+    me {
+      id
+      email
+      name
     }
   }
 `;
@@ -80,3 +80,25 @@ export const RESET_PASSWORD = gql`
     resetPassword(userId: $userId, token: $token, newPassword: $newPassword)
   }
 `;
+
+export const CREATE_CHECKOUT_SESSION = gql`
+  mutation CreateCheckoutSession($cartItems: [StripeCartItemInput!]!) {
+    createCheckoutSession(cartItems: $cartItems) {
+    url
+    }
+  }
+`;
+
+export const CLEAR_CART = gql`
+  mutation ClearCart {
+  clearCart
+  }
+`;
+
+export const VALIDATE_SUCCESS = gql`
+  mutation ValidateSuccess($randomValue: String!) {
+    validateSuccess(randomValue: $randomValue) {
+    success
+    }
+  }
+`

@@ -1,11 +1,15 @@
-const { User, Cart, Product } = require('../models/')
+const { User, Cart, Product, CheckoutSession } = require('../models/')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
+const { v4: uuidv4 } = require('uuid');
 
 const JWT_SECRET = process.env.JWT_SECRET
 const CHOCOLATE_SHOP_EMAIL = process.env.CHOCOLATE_SHOP_EMAIL
 const CHOCOLATE_SHOP_EMAIL_PASSWORD = process.env.CHOCOLATE_SHOP_EMAIL_PASSWORD
+const STRIPE_KEY = process.env.STRIPE_KEY
+const PRICE_ID = process.env.PRICE_ID
+const DOMAIN = 'http://localhost:5173'
 
 const resolvers = {
   Query: {
@@ -157,6 +161,75 @@ const resolvers = {
       console.log('Password updated successfully')
 
       return true
+    },
+    createCheckoutSession: async (_, { cartItems }, context) => {
+      const stripe = require('stripe')(STRIPE_KEY)
+      const randomValue = uuidv4()
+
+      try {
+        const session = await stripe.checkout.sessions.create({
+          line_items: cartItems.map((item) => ({
+            price_data: {
+              currency: 'usd',
+              product_data: { name: item.name },
+              unit_amount: item.price
+            },
+            quantity: item.quantity
+          })),
+          mode: 'payment',
+          success_url: `${DOMAIN}/success/${randomValue}`,
+          cancel_url: `${DOMAIN}/cancel`, 
+        })
+
+        await CheckoutSession.create({
+          randomValue,
+          sessionId: session.id,
+          userId: context.currentUser.id
+        })
+
+        return { url: session.url }
+      } catch (error) {
+        console.error('Stripe error: ', error)
+        throw new Error('Failed to create checkout session')
+      }
+    },
+    clearCart: async (_, __, context) => {
+      if (!context.currentUser) {
+        throw new Error('Not Authenticated')
+      }
+      
+      try {
+        await Cart.destroy({
+          where: { userId: context.currentUser.id }
+        })
+        return true
+      } catch (error) {
+        console.error('Error clearing cart: ', error)
+        throw new Error('Failed to clear cart')
+      }
+    },
+    validateSuccess: async (_, { randomValue }, context) => {
+      console.log('randomValue:', randomValue);
+      console.log('currentUser:', context.currentUser);
+      if (!context.currentUser) {
+        throw new Error('Not authenticated')
+      }
+
+      const sessionData = await CheckoutSession.findOne({
+        where: { randomValue, userId: context.currentUser.id }
+      })
+
+      if (!sessionData) {
+        throw new Error('Invalid or expired success link')
+      }
+
+      await CheckoutSession.destroy({ where: { randomValue }})
+
+      await Cart.destroy({
+        where: { userId: context.currentUser.id },
+      });
+
+      return { success: true }
     }
   },
 };

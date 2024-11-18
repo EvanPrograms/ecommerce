@@ -118,6 +118,20 @@ export const ShopContextProvider = (props) => {
     });
   };
 
+  const refetchCart = async () => {
+    if (user?.id) {
+      const { data } = await client.query({
+        query: GET_USER_CART,
+        variables: { userId: user.id },
+        fetchPolicy: "network-only", // Ensures fresh data is fetched
+      });
+      setCartItems(data.getUserCart.reduce((acc, item) => {
+        acc[item.productId] = item.quantity;
+        return acc;
+      }, {}));
+    }
+  };
+
   // const addToCart = (itemId) => {
   //   // setCartItems((prev) => ({...prev, [itemId]: prev[itemId] + 1}))
   //   setCartItems((prev) => {
@@ -203,6 +217,7 @@ export const ShopContextProvider = (props) => {
     clearTheCart: (itemId) => handleCartChange(itemId, -cartItems[itemId]),
     updateCartItemCount: (newAmount, itemId) => handleCartChange(itemId, newAmount - cartItems[itemId]),
     getTotalCartAmount,
+    refetchCart,
     products
    }
 

@@ -27,6 +27,13 @@ const typeDefs = gql`
     quantity: Int!
   }
 
+  input StripeCartItemInput {
+    productId: ID!
+    name: String!
+    price: Int!
+    quantity: Int!
+  }
+
   type Token {
     value: String!  
   }
@@ -44,13 +51,21 @@ const typeDefs = gql`
   }
 
   type CartUpdateResponse {
-  message: String!
-  errors: [FieldError!]
+    message: String!
+    errors: [FieldError!]
   }
 
   type FieldError {
-  field: String!
-  message: String!
+    field: String!
+    message: String!
+  }
+
+  type CheckoutSessionResponse {
+    url: String!
+  }
+
+  type ValidateSuccessResponse {
+  success: Boolean!
   }
 
   type Mutation {
@@ -59,6 +74,9 @@ const typeDefs = gql`
     updateUserCart(userId: ID!, cart: [CartItemInput!]!) : CartUpdateResponse!
     requestPasswordReset(email: String!) : Boolean!
     resetPassword(userId: ID!, token: String!, newPassword: String!): Boolean!
+    createCheckoutSession(cartItems: [StripeCartItemInput!]!): CheckoutSessionResponse!
+    clearCart: Boolean!
+    validateSuccess(randomValue: String!): ValidateSuccessResponse!
   }
 `;
 
