@@ -25,9 +25,10 @@ export const GET_PRODUCTS = gql`
 
 export const GET_USER_CART = gql`
   query GetUserCart($userId: ID!) {
-  getUserCart(userId: $userId) {
-    productId
-    quantity
+    getUserCart(userId: $userId) {
+      id
+      productId
+      quantity
     }
   }
 `;

@@ -28,7 +28,24 @@ const httpLink = createHttpLink({
 })
 
 const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache:new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          getUserCart: {
+            keyArgs: ["userId"], // Ensure cache keys are based on `userId`
+            merge(existing = [], incoming) {
+              // Handle merging of existing and incoming data
+              return [...incoming];
+            },
+          },
+        },
+      },
+      CartItem: {
+        keyFields: ["id"], // Normalize `CartItem` by its `id`
+      },
+    },
+  }),
   link: authLink.concat(httpLink)
 })
 

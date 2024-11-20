@@ -23,6 +23,7 @@ const resolvers = {
       })
 
       return cartItems.map(item => ({
+        id: item.id,
         productId: item.productId,
         quantity: item.quantity
       }))
@@ -179,6 +180,10 @@ const resolvers = {
           mode: 'payment',
           success_url: `${DOMAIN}/success/${randomValue}`,
           cancel_url: `${DOMAIN}/cancel`, 
+          billing_address_collection: 'required',
+          shipping_address_collection: {
+            allowed_countries: ['US', 'CA']
+          }
         })
 
         if (context.currentUser) {

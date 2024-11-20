@@ -10,14 +10,15 @@ const typeDefs = gql`
   } 
   
   type Product {
-  id: ID!
-  name: String!
-  image: String!
-  description: String!
-  price: Int!
+    id: ID!
+    name: String!
+    image: String!
+    description: String!
+    price: Int!
   }
 
   type CartItem {
+      id: ID!
       productId: ID!
       quantity: Int!
   }
