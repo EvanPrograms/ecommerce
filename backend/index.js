@@ -13,6 +13,8 @@ const typeDefs = require('./graphql/schema')
 const resolvers = require('./graphql/resolvers')
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
+const bodyParser = require('body-parser')
+
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -35,18 +37,14 @@ const server = new ApolloServer({
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
+
 // Middleware
 app.use(express.json());
 app.use(cors());
 
-
-// app.use('/api/products', productsRouter)
-// app.use('/api/cart', cartRouter)
-// app.use('/api/users', usersRouter)
-// app.use('/api/login', loginRouter)
-// app.use('/api/checkout', stripeRouter)
-
-
+// Stripe webhook routes
+app.use('/api/webhook', stripeRouter);
 
 const startServer = async () => {
   await connectToDatabase()

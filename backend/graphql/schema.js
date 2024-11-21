@@ -49,6 +49,7 @@ const typeDefs = gql`
     getUserCart(userId: ID!): [CartItem]
     getProducts: [Product]
     me: User
+    getOrderHistory: [Order!]!
   }
 
   type CartUpdateResponse {
@@ -70,6 +71,40 @@ const typeDefs = gql`
     userType: String!
   }
 
+  type Review {
+    id: ID!
+    userId: ID!
+    productId: ID!
+    review: String!
+    stars: Int!
+    createdAt: String
+    updatedAt: String
+  }
+
+  type OrderItem {
+    productId: ID!
+    quantity: Int!
+    price: Int!
+  }
+
+  type Order {
+    id: ID!
+    userId: ID!
+    items: [OrderItem!]!
+    totalPrice: Int!
+    shippingAddress: Address!
+    orderDate: String!
+    sessionId: String!
+  }
+
+  type Address {
+    street: String!
+    city: String!
+    state: String!
+    zip: String!
+    country: String!
+  }
+
   type Mutation {
     createUser(email: String!, name: String!, password: String!): User!
     login(email: String!, password: String!): AuthPayload!
@@ -79,6 +114,7 @@ const typeDefs = gql`
     createCheckoutSession(cartItems: [StripeCartItemInput!]!): CheckoutSessionResponse!
     clearCart: Boolean!
     validateSuccess(randomValue: String!): ValidateSuccessResponse!
+    createReview(productId: ID!, review: String!, stars: Int!): Review!
   }
 `;
 

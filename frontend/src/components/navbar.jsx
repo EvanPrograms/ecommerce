@@ -45,7 +45,15 @@ const Navbar = () => {
             : <Button color="inherit" component={Link} to="/login">
                 log in
               </Button>
-          }     
+          }
+          {user
+            ? <div className="orderhistory">
+                <Button color="inherit" component={Link} to="/order-history">
+                  Order History
+                </Button>
+              </div>
+             :  <></>
+          }
         </div>                         
       </Toolbar>
     </AppBar>

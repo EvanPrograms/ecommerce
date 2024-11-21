@@ -1,4 +1,4 @@
-const { User, Cart, Product, CheckoutSession } = require('../models/')
+const { User, Cart, Product, CheckoutSession, Order, Review } = require('../models/')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
@@ -33,6 +33,18 @@ const resolvers = {
     },
     me: (root, args, context) => {
       return context.currentUser
+    },
+    getOrderHistory: async (_, __, { currentUser }) => {
+      if (!currentUser) {
+        throw new Error('Not authenticated')
+      }
+
+      const orders = await Order.findAll({
+        where: { userId: currentUser.id },
+        order: [['orderDate', 'DESC']]
+      })
+
+      return orders
     }
   },
   Mutation: {
@@ -183,7 +195,11 @@ const resolvers = {
           billing_address_collection: 'required',
           shipping_address_collection: {
             allowed_countries: ['US', 'CA']
-          }
+          },
+          metadata: {
+            userId: context.currentUser ? context.currentUser.id : null, // Pass userId if authenticated
+            cartItems: JSON.stringify(cartItems), // Pass cart items as JSON
+          },
         })
 
         if (context.currentUser) {
@@ -192,6 +208,27 @@ const resolvers = {
             sessionId: session.id,
             userId: context.currentUser.id
           })
+
+          // const orderItems = cartItems.map((item) => ({
+          //   productId: item.productId,
+          //   quantity: item.quantity,
+          //   price: item.price
+          // }))
+
+          // const totalPrice = cartItems.reduce(
+          //   (total, item) => total + item.price * item.quantity,
+          //   0
+          // )
+
+          // await Order.create({
+          //   userId: context.currentUser.id,
+          //   items: orderItems,
+          //   totalPrice,
+          //   shippingAddress: null,
+          //   orderDate: new Date(),
+          //   sessionId: session.id
+          // })
+          // console.log('Order successfully created for user:', context.currentUser.id);
         } else {
           console.log('Guest checkout session created: ', session.id)
         }
@@ -242,6 +279,32 @@ const resolvers = {
       await CheckoutSession.destroy({ where: { randomValue }})
 
       return { success: true, userType }
+    },
+    createReview: async (_, { productId, review, stars }, context) => {
+      const currentUser = context.currentUser
+      
+      if (!currentUser) {
+        throw new Error('Not Authenticated')
+      }
+
+      if (stars < 0 || stars > 5) {
+        throw new Error('Stars must be between 0 and 5')
+      }
+
+      const product = await Product.findByPk(productId)
+      if (!product) {
+        throw new Error('Product not found')
+      }
+
+      const newReview = await Review.create({
+        userId: currentUser.id,
+        productId,
+        review,
+        stars
+      })
+
+      return newReview
+
     }
   },
 };

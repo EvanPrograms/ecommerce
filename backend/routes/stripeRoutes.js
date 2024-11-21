@@ -1,23 +1,66 @@
-require('dotenv').config();
-const stripe = require('stripe')(process.env.STRIPE_KEY);
-const router = require('express').Router()
+const express = require('express');
+const bodyParser = require('body-parser')
+const router = express.Router();
+const Order = require('../models/order')
 
-const DOMAIN = 'http://localhost:5173'
+const STRIPE_KEY = process.env.STRIPE_KEY
+const endpointSecret = process.env.WEBHOOK_SECRET
 
-router.post('/create-checkout-session', async (req, res) => {
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price: process.env.PRICE_ID,
-        quantity: 1
-      }
-    ],
-    mode: 'payment',
-    success_url: `${DOMAIN}/success.html`,
-    cancle_url: `${DOMAIN}/cancel.html`
-  })
+const stripe = require('stripe')(STRIPE_KEY)
 
-  res.redirect(303, session.url)
+router.get('/', async (request, response) => {
+  response.send('testing get')
 })
 
-module.exports = router
+router.post('/', bodyParser.raw({ type: 'application/json '}), async (request, response) => {
+  const signature = request.headers['stripe-signature'];
+
+  if (!endpointSecret) {
+    console.error('Missing webhook secret in environment variables');
+    return response.status(500).send('Webhook secret not configured');
+  }
+
+  try {
+    const event = stripe.webhooks.constructEvent(
+      request.body,
+      signature,
+      endpointSecret
+    );
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      console.log('Checkout session completed:', session);
+
+      try {
+        // Extract data from session
+        const userId = session.metadata.userId; // Assuming `userId` is passed in metadata
+        const cartItems = JSON.parse(session.metadata.cartItems); // Assuming `cartItems` is stored in metadata
+        const totalPrice = session.amount_total; // Total price from Stripe session
+        const shippingAddress = session.shipping_details?.address;
+
+        // Create the order in your database
+        await Order.create({
+          userId: userId ? parseInt(userId, 10) : null, // Parse userId if it's provided
+          items: cartItems, // Use parsed cart items
+          totalPrice,
+          shippingAddress: shippingAddress
+            ? JSON.stringify(shippingAddress)
+            : null, // Convert address to string if exists
+          orderDate: new Date(),
+          sessionId: session.id,
+        });
+
+        console.log('Order created for session:', session.id);
+      } catch (error) {
+        console.error('Error creating order:', error.message);
+      }
+    }
+
+    response.status(200).send('Webhook handled successfully');
+  } catch (error) {
+    console.error('Webhook signature verification failed:', error.message);
+    response.status(400).send(`Webhook Error: ${error.message}`);
+  }
+});
+
+module.exports = router;

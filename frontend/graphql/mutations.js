@@ -102,4 +102,48 @@ export const VALIDATE_SUCCESS = gql`
     success
     }
   }
-`
+`;
+
+export const CREATE_REVIEW = gql`
+  mutation CreateReview($productId: ID!, $review: String!, $stars: Int!) {
+    createReview(productId: $productId, review: $review, stars: $stars) {
+      id
+      userId
+      productId
+      review
+      stars
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
+export const ORDER_HISTORY = gql`
+  query GetOrderHIstory {
+    getOrderHistory {
+      id
+      userId
+      items
+      totalPrice
+      shippingAddress {
+        street
+        city
+        state
+        zip
+        country
+      }
+      orderDate
+      sessionId
+    }
+  }
+`;
+
+// export const GET_USER_CART = gql`
+//   query GetUserCart($userId: ID!) {
+//     getUserCart(userId: $userId) {
+//       id
+//       productId
+//       quantity
+//     }
+//   }
+// `;
