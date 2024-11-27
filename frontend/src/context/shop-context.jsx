@@ -38,7 +38,7 @@ export const ShopContextProvider = (props) => {
   const { user } = useContext(AuthContext)
   const client = useApolloClient()
 
-  const { data: products, error, isLoading } = useQuery({
+  const { data: products, error, isLoading, refetch } = useQuery({
     queryKey: ['products'],
     queryFn: () => client
       .query({
@@ -146,83 +146,13 @@ export const ShopContextProvider = (props) => {
     }
   };
 
-  // const addToCart = (itemId) => {
-  //   // setCartItems((prev) => ({...prev, [itemId]: prev[itemId] + 1}))
-  //   setCartItems((prev) => {
-  //     const newCart = { ...prev, [itemId]: prev[itemId] + 1 };
-      
-  //     if (user?.id) {
-  //       // Convert newCart to the expected array format for the mutation
-  //       const cart = Object.keys(newCart).map(productId => ({
-  //         productId: productId,
-  //         quantity: newCart[productId]
-  //       }));
-  //       console.log('add to cart', { userId: user.id, cart: cart });
-  //       console.log('this is the cart', cart)
-  
-  //       mutation.mutate({ userId: user.id, cart: cart });
-  //     }
-  
-  //     return newCart;
-  //   })
-  // }
-
-  // const removeFromCart = (itemId) => {
-  //   // setCartItems((prev) => ({...prev, [itemId]: prev[itemId] - 1}))
-  //   setCartItems((prev) => {
-  //     const newCart = { ...prev, [itemId]: prev[itemId] - 1 };
-  //     if (user?.id) {
-  //       // Convert newCart to the expected array format for the mutation
-  //       const cart = Object.keys(newCart).map(productId => ({
-  //         productId: productId,
-  //         quantity: newCart[productId]
-  //       }));
-  //       console.log('remove to cart', { userId: user.id, cart: cart });
-  //       console.log('this is the cart', cart)
-  
-  //       mutation.mutate({ userId: user.id, cart: cart });
-  //     }
-  //     return newCart;
-  //   });
-  // }
-
-  // const clearTheCart = (itemId) => {
-  //   // setCartItems((prev) => ({...prev, [itemId]: 0 }))
-  //   setCartItems((prev) => {
-  //     const newCart = { ...prev, [itemId]: 0 };
-  //     if (user?.id) {
-  //       // Convert newCart to the expected array format for the mutation
-  //       const cart = Object.keys(newCart).map(productId => ({
-  //         productId: productId,
-  //         quantity: newCart[productId]
-  //       }));
-  //       console.log('clear cart', { userId: user.id, cart: cart });
-  //       console.log('this is the cart', cart)
-  
-  //       mutation.mutate({ userId: user.id, cart: cart });
-  //     }
-  //     return newCart;
-  //   });
-  // }
-
-  // const updateCartItemCount = (newAmount, itemId) => {
-  //   // setCartItems((prev) => ({...prev, [itemId]: newAmount}))
-  //   setCartItems((prev) => {
-  //     const newCart = { ...prev, [itemId]: newAmount };
-  //     if (user?.id) {
-  //       // Convert newCart to the expected array format for the mutation
-  //       const cart = Object.keys(newCart).map(productId => ({
-  //         productId: productId,
-  //         quantity: newCart[productId]
-  //       }));
-  //       console.log('update cart', { userId: user.id, cart: cart });
-  //       console.log('this is the cart', cart)
-  
-  //       mutation.mutate({ userId: user.id, cart: cart });
-  //     }
-  //     return newCart;
-  //   });
-  // }
+  const refetchProducts = async () => {
+    try {
+      await refetch()
+    } catch (error) {
+      console.error("Error refetching products:", error);
+    }
+  };
 
   const contextValue = { 
     cartItems, 
@@ -232,6 +162,7 @@ export const ShopContextProvider = (props) => {
     updateCartItemCount: (newAmount, itemId) => handleCartChange(itemId, newAmount - cartItems[itemId]),
     getTotalCartAmount,
     refetchCart,
+    refetchProducts,
     setCartItems,
     products
    }

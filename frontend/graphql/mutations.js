@@ -19,6 +19,7 @@ export const GET_PRODUCTS = gql`
       image
       description
       price
+      totalQuantityOrdered
     }
   }
 `;
@@ -123,13 +124,19 @@ export const ORDER_HISTORY = gql`
     getOrderHistory {
       id
       userId
-      items
+      items {
+        productId
+        quantity
+        price
+        name
+      }
       totalPrice
       shippingAddress {
-        street
+        line1
+        line2
         city
         state
-        zip
+        postal_code
         country
       }
       orderDate

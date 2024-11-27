@@ -7,9 +7,13 @@ import { ShopContext, getDefaultCart } from '../../context/shop-context';
 const Success = () => {
   const { randomValue } = useParams();
   const [validateSuccess] = useMutation(VALIDATE_SUCCESS);
-  const { refetchCart, setCartItems, products } = useContext(ShopContext);
+  const { refetchCart, setCartItems, products, refetchProducts } = useContext(ShopContext);
   const navigate = useNavigate();
   const hasValidated = useRef(false);
+
+  useEffect(() => {
+    refetchProducts()
+  }, [refetchProducts])
 
   useEffect(() => {
     const handleValidation = async () => {

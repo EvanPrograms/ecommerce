@@ -26,6 +26,11 @@ Product.init({
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  totalQuantityOrdered: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'total_quantity_ordered'
+  }
   // Add other product attributes as needed
 }, {
   sequelize,

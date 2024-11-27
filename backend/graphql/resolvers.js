@@ -29,23 +29,48 @@ const resolvers = {
       }))
     },
     getProducts: async () => {
-      return await Product.findAll();
+      return await Product.findAll({
+        order: [['id', 'ASC']]
+      });
     },
     me: (root, args, context) => {
       return context.currentUser
     },
     getOrderHistory: async (_, __, { currentUser }) => {
       if (!currentUser) {
-        throw new Error('Not authenticated')
+        throw new Error('Not authenticated');
       }
-
+    
       const orders = await Order.findAll({
         where: { userId: currentUser.id },
-        order: [['orderDate', 'DESC']]
-      })
-
-      return orders
-    }
+        order: [['orderDate', 'DESC']],
+      });
+    
+      return orders.map((order) => {
+        console.log("Raw shippingAddress from DB:", order.shippingAddress); // Debugging
+    
+        const shippingAddress = order.shippingAddress
+          ? JSON.parse(order.shippingAddress) // Ensure it is parsed correctly
+          : null;
+    
+        console.log("Parsed shippingAddress:", shippingAddress); // Debugging
+    
+        return {
+          ...order.toJSON(),
+          shippingAddress: shippingAddress
+            ? {
+                line1: shippingAddress.line1,
+                line2: shippingAddress.line2 || null,
+                city: shippingAddress.city,
+                state: shippingAddress.state,
+                postal_code: shippingAddress.postal_code,
+                country: shippingAddress.country,
+              }
+            : null,
+            orderDate: new Date(order.orderDate).toISOString()
+        };
+      });
+    },
   },
   Mutation: {
     createUser: async (_, { email, name, password }) => {
@@ -208,27 +233,6 @@ const resolvers = {
             sessionId: session.id,
             userId: context.currentUser.id
           })
-
-          // const orderItems = cartItems.map((item) => ({
-          //   productId: item.productId,
-          //   quantity: item.quantity,
-          //   price: item.price
-          // }))
-
-          // const totalPrice = cartItems.reduce(
-          //   (total, item) => total + item.price * item.quantity,
-          //   0
-          // )
-
-          // await Order.create({
-          //   userId: context.currentUser.id,
-          //   items: orderItems,
-          //   totalPrice,
-          //   shippingAddress: null,
-          //   orderDate: new Date(),
-          //   sessionId: session.id
-          // })
-          // console.log('Order successfully created for user:', context.currentUser.id);
         } else {
           console.log('Guest checkout session created: ', session.id)
         }
@@ -269,6 +273,21 @@ const resolvers = {
       const userType = sessionData.userId ? 'authenticated' : 'guest'
 
       if (userType === 'authenticated' && context.currentUser?.id === sessionData.userId) {
+        const order = await Order.findOne({
+          where: { sessionId: sessionData.sessionId}
+        })
+
+        if (!order) {
+          throw new Error('Order not found for this session')
+        }
+
+        for (const item of order.items) {
+          const product = await Product.findByPk(item.productId)
+          if (product) {
+            await product.increment('totalQuantityOrdered', { by: item.quantity})
+          }
+        }
+        
         await Cart.destroy({
           where: { userId: context.currentUser.id },
         });

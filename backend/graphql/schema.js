@@ -15,6 +15,7 @@ const typeDefs = gql`
     image: String!
     description: String!
     price: Int!
+    totalQuantityOrdered: Int!
   }
 
   type CartItem {
@@ -85,6 +86,7 @@ const typeDefs = gql`
     productId: ID!
     quantity: Int!
     price: Int!
+    name: String!
   }
 
   type Order {
@@ -98,10 +100,11 @@ const typeDefs = gql`
   }
 
   type Address {
-    street: String!
+    line1: String!
+    line2: String
     city: String!
     state: String!
-    zip: String!
+    postal_code: String!
     country: String!
   }
 

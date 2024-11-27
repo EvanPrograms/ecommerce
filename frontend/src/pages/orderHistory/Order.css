@@ -1,0 +1,82 @@
+/* Container for all orders */
+.order-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Message when no orders are found */
+.no-orders {
+  text-align: center;
+  font-size: 1.2em;
+  color: #888;
+  margin-top: 20px;
+}
+
+/* Styling for each order card */
+.order-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Order date at the top of each card */
+.order-date {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Total price displayed prominently */
+.total-price {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* Section titles like "Items" and "Shipping Address" */
+.section-title {
+  font-size: 1em;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+/* List of items within an order */
+.items-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual item in the list */
+.item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Item name styling */
+.item-name {
+  font-size: 0.9em;
+  color: #333;
+}
+
+/* Item price styling */
+.item-price {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Shipping address formatting */
+.shipping-address {
+  font-size: 0.9em;
+  color: #444;
+  margin-top: 10px;
+}
