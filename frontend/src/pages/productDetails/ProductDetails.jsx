@@ -24,7 +24,6 @@ const ProductDetails = () => {
 
   const [localReviews, setLocalReviews] = useState(reviewsData?.getReviews || []);
 
-
   useEffect(() => {
     if (reviewsData?.getReviews) {
       setLocalReviews(reviewsData.getReviews);
@@ -32,7 +31,7 @@ const ProductDetails = () => {
   }, [reviewsData]);
 
   const product = products.find((product) => product.id === id)
-  const existingReview = localReviews.find((review) => review.userId === user.id);
+  const existingReview = user ? localReviews.find((review) => review.userId === user.id) : null;
 
   if (!products) {
     return <h2>Loading...</h2>;
@@ -96,44 +95,43 @@ const ProductDetails = () => {
         </div>
       </div>
       <div>
-        {existingReview ? (
+        {user && existingReview ? (
           <div>
             <h3>Your Review:</h3>
             <p>Rating: {existingReview.stars} / 5</p>
             <p>{existingReview.review}</p>
           </div>
         ) : (
-          <>
-            {!isReviewFormOpen && (
-              <button onClick={() => setIsReviewFormOpen(true)}>Leave Review</button>
-            )}
-            {isReviewFormOpen && (
-              <form onSubmit={handleSubmitReview}>
-                <h3>Leave a Review</h3>
-                <textarea
-                  name="review"
-                  placeholder="Write your review here"
-                  value={reviewText}
-                  onChange={(e) => setReviewText(e.target.value)}
-                  required
-                ></textarea>
-                <div>
-                  <label>Rating:</label>
-                  {renderStarsDropdown()}
-                </div>
-                <button type="submit">Submit Review</button>
-                <button
-                  type="button"
-                  onClick={() => setIsReviewFormOpen(false)}
-                >
-                  Cancel
-                </button>
-              </form>
-            )}
-          </>
+          user && !isReviewFormOpen && (
+            <button onClick={() => setIsReviewFormOpen(true)}>Leave Review</button>
+          )
         )}
+        {user && isReviewFormOpen && (
+          <form onSubmit={handleSubmitReview}>
+            <h3>Leave a Review</h3>
+            <textarea
+              name="review"
+              placeholder="Write your review here"
+              value={reviewText}
+              onChange={(e) => setReviewText(e.target.value)}
+              required
+            ></textarea>
+            <div>
+              <label>Rating:</label>
+              {renderStarsDropdown()}
+            </div>
+            <button type="submit">Submit Review</button>
+            <button
+              type="button"
+              onClick={() => setIsReviewFormOpen(false)}
+            >
+              Cancel
+            </button>
+          </form>
+        )}
+        {!user && <p>Please log in to leave a review!</p>}
       </div>
-      {/* <div>
+      <div>
         <h3>Reviews:</h3>
         {reviewsLoading ? (
           <p>Loading reviews...</p>
@@ -145,7 +143,7 @@ const ProductDetails = () => {
             </div>
           ))
         )}
-      </div> */}
+      </div>
     </div>
   )
 }

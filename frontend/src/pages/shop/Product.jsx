@@ -39,7 +39,7 @@ const Product = (props) => {
             ) : (
               <p>
                 <b>Rating: {averageRating.toFixed(1)} / 5</b> <br />
-                <b>{reviewCount} Review{reviewCount > 1 && s}!</b>
+                <b>{reviewCount} Review{reviewCount > 1 && "s"}!</b>
               </p>
             )}
             <p>{description}</p>

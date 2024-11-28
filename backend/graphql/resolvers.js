@@ -44,7 +44,10 @@ const resolvers = {
         where: { productId }
       });
 
-      return reviews
+      return reviews.map(review => ({
+        ...review.toJSON(),
+        createdAt: new Date(review.createdAt).toISOString()
+      }));
     },
     me: (root, args, context) => {
       return context.currentUser
