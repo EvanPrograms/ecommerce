@@ -1,10 +1,19 @@
-import React, { useContext} from "react";
+import React, { useContext, useEffect } from "react";
 import { ShopContext } from '../../context/shop-context'
 import { useNavigate } from "react-router-dom";
 
 const Product = (props) => {
-  const { id, name, image, description, price, totalQuantityOrdered } = props.data
-  const { addToCart, cartItems } = useContext(ShopContext)
+  const { 
+      id, 
+      name, 
+      image, 
+      description, 
+      price, 
+      totalQuantityOrdered, 
+      averageRating, 
+      reviewCount
+    } = props.data
+  const { addToCart, cartItems, refetchProducts } = useContext(ShopContext)
   const cartItemAmount = cartItems[id]
   const navigate = useNavigate()
 
@@ -23,6 +32,16 @@ const Product = (props) => {
             <p>
               <b>Total Ordered: {totalQuantityOrdered}</b>
             </p>
+            {reviewCount === null || reviewCount === 0 ? (
+              <p>
+                <b>No reviews yet</b>
+              </p>
+            ) : (
+              <p>
+                <b>Rating: {averageRating.toFixed(1)} / 5</b> <br />
+                <b>{reviewCount} Review{reviewCount > 1 && s}!</b>
+              </p>
+            )}
             <p>{description}</p>
             <p>${price/100}</p>
           </div>

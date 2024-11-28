@@ -29,9 +29,11 @@ const resolvers = {
       }))
     },
     getProducts: async () => {
-      return await Product.findAll({
+      const products = await Product.findAll({
         order: [['id', 'ASC']]
       });
+
+      return products.map(product => product.toJSON())
     },
     getProduct: async ({ productId }) => {
       return await Product.findByPk(productId)
@@ -348,6 +350,15 @@ const resolvers = {
         productId,
         review,
         stars
+      })
+
+      const totalStars = product.averageRating * product.reviewCount + stars
+      const newReviewCount = product.reviewCount + 1
+      const newAverageRating = totalStars / newReviewCount
+
+      await product.update({
+        averageRating: newAverageRating,
+        reviewCount: newReviewCount
       })
 
       return newReview

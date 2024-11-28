@@ -12,7 +12,7 @@ export const GET_USER = gql`
 `;
 
 export const GET_PRODUCTS = gql`
-  query  GetProducts {
+  query GetProducts {
     getProducts {
       id
       name
@@ -20,6 +20,8 @@ export const GET_PRODUCTS = gql`
       description
       price
       totalQuantityOrdered
+      averageRating
+      reviewCount
     }
   }
 `;

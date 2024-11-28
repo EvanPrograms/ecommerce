@@ -46,6 +46,7 @@ export const ShopContextProvider = (props) => {
     queryFn: () => client
       .query({
         query: GET_PRODUCTS,
+        fetchPolicy: 'network-only'
       })
       .then(response => response.data.getProducts)
   })
@@ -68,8 +69,9 @@ export const ShopContextProvider = (props) => {
       response.data.getUserCart.reduce((acc, item) => {
         acc[item.productId] = item.quantity;
         return acc;
-      }, {})
-    )
+      }, {}),
+    ),
+    enabled: !!user
   });
 
   useEffect(() => {
@@ -151,7 +153,7 @@ export const ShopContextProvider = (props) => {
 
   const refetchProducts = async () => {
     try {
-      await refetch()
+      await refetch();
     } catch (error) {
       console.error("Error refetching products:", error);
     }
@@ -165,6 +167,7 @@ export const ShopContextProvider = (props) => {
       }),
     onSuccess: (newReview) => {
       setUserReviews((prevReviews) => [...prevReviews, newReview.data.createReview])
+      refetchProducts()
     },
     onError: (error) => {
       console.error('Error submitting review: ', error)
@@ -187,7 +190,7 @@ export const ShopContextProvider = (props) => {
     updateCartItemCount: (newAmount, itemId) => handleCartChange(itemId, newAmount - cartItems[itemId]),
     getTotalCartAmount,
     refetchCart,
-    refetchProducts,
+    refetchProducts: refetch,
     setCartItems,
     userReviews,
     submitReview,

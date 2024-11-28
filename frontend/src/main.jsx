@@ -39,6 +39,12 @@ const apolloClient = new ApolloClient({
               return [...incoming];
             },
           },
+          getProducts: {
+            keyArgs: false,
+            merge(existing = [], incoming) {
+              return incoming
+            }
+          }
         },
       },
       CartItem: {

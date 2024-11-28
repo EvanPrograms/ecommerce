@@ -6,7 +6,7 @@ import './ProductDetails.css'
 const ProductDetails = () => {
   const { id } = useParams();
   const { state } = useLocation()
-  const { products, addToCart, cartItems, userReviews, submitReview } = useContext(ShopContext)
+  const { products, addToCart, cartItems, userReviews, submitReview, refetchProducts } = useContext(ShopContext)
   const cartItemAmount = cartItems[id]
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(state?.openReviewForm || false)
   const [stars, setStars] = useState(5)

@@ -16,6 +16,8 @@ const typeDefs = gql`
     description: String!
     price: Int!
     totalQuantityOrdered: Int!
+    averageRating: Float
+    reviewCount: Int
   }
 
   type CartItem {

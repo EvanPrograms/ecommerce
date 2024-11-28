@@ -30,6 +30,17 @@ Product.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     field: 'total_quantity_ordered'
+  },
+  averageRating: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+    defaultValue: 0
+  },
+  reviewCount: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+
   }
   // Add other product attributes as needed
 }, {
