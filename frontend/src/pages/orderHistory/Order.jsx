@@ -21,13 +21,19 @@ const Order = ({ orders }) => {
             {order.items.map((item, index) => (
               <li key={index} className="item">
                 <span className="item-name">
-                  {item.quantity} x {item.name} (${item.price / 100} each)
+                  {item.quantity} x{' '} 
+                    <span
+                      className='clickable-item'
+                      onClick={() => navigate(`/product/${item.productId}`)}>
+                       {item.name}
+                    </span>
+                     (${item.price / 100} each)
                   {!item.hasLeftReview ? (
                     <button onClick={() => navigate(`/product/${item.productId}`, { state: { openReviewForm: true }})}>
                       Leave Review
                     </button>
                   ) : (
-                    <p>Product reviewed</p>
+                    <span> Product Reviewed</span>
                   )}
                 </span>
                 <span className="item-price">Item total ${item.price * item.quantity / 100}</span>

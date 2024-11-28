@@ -80,3 +80,12 @@
   color: #444;
   margin-top: 10px;
 }
+.clickable-item {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+
+.clickable-item:hover {
+  text-decoration: none;
+}
