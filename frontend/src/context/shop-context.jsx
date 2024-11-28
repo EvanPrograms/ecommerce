@@ -7,7 +7,8 @@ import { useApolloClient } from '@apollo/client'
 import { 
   GET_USER_CART,
   UPDATE_USER_CART,
-  GET_PRODUCTS
+  GET_PRODUCTS,
+  CREATE_REVIEW
 } from '../../graphql/mutations'
 
 export const ShopContext = createContext(null)
@@ -37,6 +38,8 @@ const useCartUpdate = (mutation) => {
 export const ShopContextProvider = (props) => {
   const { user } = useContext(AuthContext)
   const client = useApolloClient()
+
+  const [userReviews, setUserReviews] = useState([])
 
   const { data: products, error, isLoading, refetch } = useQuery({
     queryKey: ['products'],
@@ -154,6 +157,28 @@ export const ShopContextProvider = (props) => {
     }
   };
 
+  const reviewMutation = useMutation({
+    mutationFn: ({ productId, review, stars }) =>
+      client.mutate({
+        mutation: CREATE_REVIEW,
+        variables: { productId, review, stars}
+      }),
+    onSuccess: (newReview) => {
+      setUserReviews((prevReviews) => [...prevReviews, newReview.data.createReview])
+    },
+    onError: (error) => {
+      console.error('Error submitting review: ', error)
+    }
+  })
+
+  const submitReview = (reviewData) => {
+    if (!user?.id) {
+      console.error('User is not logged in')
+      return
+    }
+    reviewMutation.mutate(reviewData)
+  }
+
   const contextValue = { 
     cartItems, 
     addToCart: (itemId) => handleCartChange(itemId, 1),
@@ -164,6 +189,8 @@ export const ShopContextProvider = (props) => {
     refetchCart,
     refetchProducts,
     setCartItems,
+    userReviews,
+    submitReview,
     products
    }
 

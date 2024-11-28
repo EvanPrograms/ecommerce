@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Shop from './pages/shop/Shop'
-import ProductDetails from './pages/ProductDetails';
+import ProductDetails from './pages/productDetails/ProductDetails';
 import Cart from './pages/cart/Cart';
 import AuthPage from './pages/login/AuthPage'
 import SignUp from './pages/login/SignUp';

@@ -1,7 +1,9 @@
 import React from 'react';
 import './Order.css';
+import { useNavigate } from 'react-router-dom';
 
 const Order = ({ orders }) => {
+  const navigate = useNavigate()
   if (orders.length === 0) {
     return <div className="no-orders">No order history found.</div>;
   }
@@ -20,6 +22,13 @@ const Order = ({ orders }) => {
               <li key={index} className="item">
                 <span className="item-name">
                   {item.quantity} x {item.name} (${item.price / 100} each)
+                  {!item.hasLeftReview ? (
+                    <button onClick={() => navigate(`/product/${item.productId}`, { state: { openReviewForm: true }})}>
+                      Leave Review
+                    </button>
+                  ) : (
+                    <p>Product reviewed</p>
+                  )}
                 </span>
                 <span className="item-price">Item total ${item.price * item.quantity / 100}</span>
               </li>

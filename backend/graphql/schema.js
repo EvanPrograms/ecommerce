@@ -49,6 +49,7 @@ const typeDefs = gql`
     users: [User!]!
     getUserCart(userId: ID!): [CartItem]
     getProducts: [Product]
+    getProduct(productId: ID!): [Product]
     me: User
     getOrderHistory: [Order!]!
   }
@@ -87,6 +88,7 @@ const typeDefs = gql`
     quantity: Int!
     price: Int!
     name: String!
+    hasLeftReview: Boolean!
   }
 
   type Order {

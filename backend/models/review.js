@@ -39,7 +39,13 @@ Review.init({
   sequelize,
   underscored: true,
   timestamps: true,
-  modelName: 'review'
+  modelName: 'review',
+  indexes: [
+    {
+      unique: true,
+      fields: ['user_id', 'product_id']
+    }
+  ]
 })
 
 module.exports = Review

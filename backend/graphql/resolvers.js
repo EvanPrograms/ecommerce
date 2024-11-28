@@ -33,6 +33,9 @@ const resolvers = {
         order: [['id', 'ASC']]
       });
     },
+    getProduct: async ({ productId }) => {
+      return await Product.findByPk(productId)
+    },
     me: (root, args, context) => {
       return context.currentUser
     },
@@ -46,17 +49,34 @@ const resolvers = {
         order: [['orderDate', 'DESC']],
       });
     
-      return orders.map((order) => {
+      return orders.map(async (order) => {
         console.log("Raw shippingAddress from DB:", order.shippingAddress); // Debugging
     
         const shippingAddress = order.shippingAddress
           ? JSON.parse(order.shippingAddress) // Ensure it is parsed correctly
           : null;
+
+        const itemsWithReviewStatus = await Promise.all(
+          order.items.map( async (item) => {
+            const hasReview = await Review.findOne({
+              where: {
+                userId: currentUser.id,
+                productId: item.productId
+              }
+            })
+
+            return {
+              ...item,
+              hasLeftReview: !!hasReview
+            }
+          })
+        )
     
         console.log("Parsed shippingAddress:", shippingAddress); // Debugging
     
         return {
           ...order.toJSON(),
+          items: itemsWithReviewStatus,
           shippingAddress: shippingAddress
             ? {
                 line1: shippingAddress.line1,
@@ -313,6 +333,14 @@ const resolvers = {
       const product = await Product.findByPk(productId)
       if (!product) {
         throw new Error('Product not found')
+      }
+
+      const existingReview = await Review.findOne({
+        where: { userId: currentUser.id, productId}
+      })
+
+      if (existingReview) {
+        throw new Error('You have already reviewed this product')
       }
 
       const newReview = await Review.create({

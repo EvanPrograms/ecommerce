@@ -24,6 +24,19 @@ export const GET_PRODUCTS = gql`
   }
 `;
 
+export const GET_PRODUCT = gql`
+  query GetProduct($productId: ID!) {
+    getProduct(productId: $productId) {
+    id
+    name
+    image
+    description
+    price
+    totalQuantityOrdered
+    }
+  }
+`;
+
 export const GET_USER_CART = gql`
   query GetUserCart($userId: ID!) {
     getUserCart(userId: $userId) {
@@ -129,6 +142,7 @@ export const ORDER_HISTORY = gql`
         quantity
         price
         name
+        hasLeftReview
       }
       totalPrice
       shippingAddress {
