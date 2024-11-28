@@ -8,7 +8,8 @@ import {
   GET_USER_CART,
   UPDATE_USER_CART,
   GET_PRODUCTS,
-  CREATE_REVIEW
+  CREATE_REVIEW,
+  ORDER_HISTORY
 } from '../../graphql/mutations'
 
 export const ShopContext = createContext(null)
@@ -171,7 +172,8 @@ export const ShopContextProvider = (props) => {
     },
     onError: (error) => {
       console.error('Error submitting review: ', error)
-    }
+    },
+    
   })
 
   const submitReview = (reviewData) => {

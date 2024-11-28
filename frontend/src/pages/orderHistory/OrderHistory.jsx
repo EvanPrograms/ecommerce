@@ -4,7 +4,9 @@ import Order from './Order'
 
 
 const OrderHistory = () => {
-  const { data, loading, error} = useQuery(ORDER_HISTORY)
+  const { data, loading, error} = useQuery(ORDER_HISTORY, {
+    fetchPolicy: 'network-only'
+  })
 
   if (loading) {
     return <div>Loading Order History...</div>
