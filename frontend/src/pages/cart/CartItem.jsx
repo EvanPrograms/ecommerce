@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { ShopContext } from "../../context/shop-context";
+import { useNavigate } from "react-router-dom";
 
 const CartItem = (props) => {
   const { 
@@ -9,6 +10,7 @@ const CartItem = (props) => {
     cartItems, 
     updateCartItemCount
    } = useContext(ShopContext)
+   const navigate = useNavigate()
 
   const { id, name, image, description, price} = props.data
   const [inputValue, setInputValue] = useState(cartItems[id] || 0);
@@ -25,9 +27,23 @@ const CartItem = (props) => {
     }
   };
 
+  const handleDivClick = (e) => {
+    if (
+      e.target.tagName !== "BUTTON" && 
+      e.target.tagName !== "INPUT" &&
+      e.target.tagName !== "IMG"
+    ) {
+      navigate(`/product/${id}`);
+    }
+  };
+
   return (
-    <div className="cartItem">
-      <img src={image} />
+    <div 
+    className="cartItem" 
+    onClick={handleDivClick} 
+    style={{ cursor: 'pointer' }}
+    >
+      <img src={image} alt={`${name}`}/>
       <div className="description">
         <p>
           <b>{name}</b>
