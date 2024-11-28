@@ -8,8 +8,7 @@ import {
   GET_USER_CART,
   UPDATE_USER_CART,
   GET_PRODUCTS,
-  CREATE_REVIEW,
-  ORDER_HISTORY
+  CREATE_REVIEW
 } from '../../graphql/mutations'
 
 export const ShopContext = createContext(null)
@@ -161,28 +160,35 @@ export const ShopContextProvider = (props) => {
   };
 
   const reviewMutation = useMutation({
-    mutationFn: ({ productId, review, stars }) =>
-      client.mutate({
+    mutationFn: async ({ productId, review, stars }) => {
+      return await client.mutate({
         mutation: CREATE_REVIEW,
-        variables: { productId, review, stars}
-      }),
+        variables: { productId, review, stars },
+      });
+    },
     onSuccess: (newReview) => {
       setUserReviews((prevReviews) => [...prevReviews, newReview.data.createReview])
       refetchProducts()
     },
     onError: (error) => {
       console.error('Error submitting review: ', error)
-    },
-    
+    }
   })
 
-  const submitReview = (reviewData) => {
+  const submitReview = async (reviewData) => {
     if (!user?.id) {
-      console.error('User is not logged in')
-      return
+      console.error('User is not logged in');
+      return;
     }
-    reviewMutation.mutate(reviewData)
-  }
+  
+    try {
+      const response = await reviewMutation.mutateAsync(reviewData); // Await the mutation
+      return response; // Return the result to the caller
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      throw error; // Re-throw for caller to handle
+    }
+  };
 
   const contextValue = { 
     cartItems, 

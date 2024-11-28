@@ -1,7 +1,10 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useParams, useLocation } from 'react-router-dom';
 import { ShopContext } from '../../context/shop-context';
+import { useQuery } from '@apollo/client';
+import { GET_REVIEWS } from '../../../graphql/mutations';
 import './ProductDetails.css'
+import { AuthContext } from '../../context/auth-context';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -12,8 +15,24 @@ const ProductDetails = () => {
   const [stars, setStars] = useState(5)
   const [reviewText, setReviewText] = useState('')
 
+  const { user } = useContext(AuthContext)
+
+  const { data: reviewsData, loading: reviewsLoading, refetch } = useQuery(GET_REVIEWS, {
+    variables: { productId: id }, // Pass productId to the query
+    fetchPolicy: 'network-only', // Ensure fresh data
+  });
+
+  const [localReviews, setLocalReviews] = useState(reviewsData?.getReviews || []);
+
+
+  useEffect(() => {
+    if (reviewsData?.getReviews) {
+      setLocalReviews(reviewsData.getReviews);
+    }
+  }, [reviewsData]);
+
   const product = products.find((product) => product.id === id)
-  const existingReview = userReviews?.find((review) => review.productId === id)
+  const existingReview = localReviews.find((review) => review.userId === user.id);
 
   if (!products) {
     return <h2>Loading...</h2>;
@@ -23,18 +42,27 @@ const ProductDetails = () => {
     return <h2>Product not found</h2>;
   }
 
-  const handleSubmitReview = (event) => {
-    event.preventDefault()
+  
+
+
+  const handleSubmitReview = async (event) => {
+    event.preventDefault();
     const reviewData = {
       productId: product.id,
       review: reviewText,
-      stars
+      stars,
+    };
+  
+    try {
+      const { data } = await submitReview(reviewData);
+      setIsReviewFormOpen(false);
+      setLocalReviews((prevReviews) => [...prevReviews, data.createReview]);
+      await refetch(); // Refresh reviews
+    } catch (error) {
+      console.error("Error submitting review: ", error);
     }
-    submitReview(reviewData)
-    setIsReviewFormOpen(false)
-    console.log('Submitting Review: ', reviewData)
-    
-  }
+  };
+  
 
   const renderStarsDropdown = () => (
     <select
@@ -105,6 +133,19 @@ const ProductDetails = () => {
           </>
         )}
       </div>
+      {/* <div>
+        <h3>Reviews:</h3>
+        {reviewsLoading ? (
+          <p>Loading reviews...</p>
+        ) : (
+          reviewsData?.getReviews.map((review) => (
+            <div key={review.id}>
+              <p><strong>{review.stars} / 5:</strong> {review.review}</p>
+              <p><em>Posted on {new Date(review.createdAt).toLocaleDateString()}</em></p>
+            </div>
+          ))
+        )}
+      </div> */}
     </div>
   )
 }

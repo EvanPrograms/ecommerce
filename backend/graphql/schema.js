@@ -54,6 +54,7 @@ const typeDefs = gql`
     getProduct(productId: ID!): [Product]
     me: User
     getOrderHistory: [Order!]!
+    getReviews(productId: ID!): [Review!]!
   }
 
   type CartUpdateResponse {

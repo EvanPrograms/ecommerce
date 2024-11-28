@@ -161,12 +161,15 @@ export const ORDER_HISTORY = gql`
   }
 `;
 
-// export const GET_USER_CART = gql`
-//   query GetUserCart($userId: ID!) {
-//     getUserCart(userId: $userId) {
-//       id
-//       productId
-//       quantity
-//     }
-//   }
-// `;
+export const GET_REVIEWS = gql`
+  query GetReviews($productId: ID!) {
+    getReviews(productId: $productId) {
+      id
+      userId
+      productId
+      review
+      stars
+      createdAt
+    }
+  }
+`;

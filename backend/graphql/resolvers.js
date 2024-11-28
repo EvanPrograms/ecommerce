@@ -38,6 +38,14 @@ const resolvers = {
     getProduct: async ({ productId }) => {
       return await Product.findByPk(productId)
     },
+    getReviews: async (_, { productId }) => {
+      console.log('Fetching reviews for productId:', productId);
+      const reviews = await Review.findAll({
+        where: { productId }
+      });
+
+      return reviews
+    },
     me: (root, args, context) => {
       return context.currentUser
     },
