@@ -75,7 +75,7 @@ resource "aws_iam_role_policy" "s3_access" {
 resource "aws_instance" "backend_server" {
   ami           = "ami-088d38b423bff245f" # Use a Node.js-ready AMI
   instance_type = "t2.micro"
-  key_name      = "key pair"
+  key_name      = var.key_name
 
   user_data = <<-EOF
     #!/bin/bash
@@ -154,4 +154,9 @@ resource "aws_security_group" "postgres_sg" {
 output "rds_endpoint" {
   value = aws_db_instance.postgres.endpoint
   description = "PostgreSQL RDS Endpoint"
+}
+
+resource "aws_eip" "backend_eip" {
+  instance = aws_instance.backend_server.id
+  domain   = "vpc" # Use domain instead of vpc
 }

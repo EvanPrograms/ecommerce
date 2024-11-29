@@ -8,7 +8,7 @@ variable "instance_type" {
 
 variable "key_name" {
   description = "Key pair for accessing EC2 instances"
-  default = "key pair"
+  default = "acekey"
 }
 
 variable "postgres_password" {
