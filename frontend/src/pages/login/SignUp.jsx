@@ -44,17 +44,6 @@ const SignUp = () => {
     }
   }
 
-  // const handleSignUp = async (values) => {
-  //   try {
-  //     // console.log('API URL:', process.env.VITE_API_URL)
-  //     const response = await axios.post(`http://localhost:5000/api/users`, values)
-  //     console.log('sign up successful', response.data)
-  //     navigate('/shop')
-  //   } catch (error) {
-  //     console.log('Sign up error', error)
-  //   }
-  // }
-
   return (
     <Formik
       initialValues={{ email: '', name: '', password: '' }}

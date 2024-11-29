@@ -24,6 +24,7 @@ const SignIn = () => {
         const user = data.login.user
         localStorage.setItem('user-token', token)
         authLogin(user, token); // Pass both user data and token
+        navigate('/shop')
       }
     } catch (error) {
       console.error("Login attempt failed:", error);
@@ -40,14 +41,6 @@ const SignIn = () => {
     password: Yup.string().required('Password is required')
   })
 
-  // const handleSignIn = async (values) => {
-  //   try {
-  //     const response = await axios.post('/api/login', values)
-  //     console.log('Login successful', response.data)
-  //   } catch (error) {
-  //     console.error('Login failed', error.response.data)
-  //   }
-  // }
   return (
     <div className="form">
       <Formik

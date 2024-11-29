@@ -11,6 +11,7 @@ dist/
 
 # Environment variables
 .env
+**/.env.*
 
 # OS-specific files
 .DS_Store
@@ -19,3 +20,15 @@ Thumbs.db
 # IDE-specific files
 .vscode/
 .idea/
+
+# Ignore Terraform state and lock files
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Ignore local overrides
+*.local
+
+*.mp4
+*.sql

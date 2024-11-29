@@ -9,7 +9,7 @@ const CHOCOLATE_SHOP_EMAIL = process.env.CHOCOLATE_SHOP_EMAIL
 const CHOCOLATE_SHOP_EMAIL_PASSWORD = process.env.CHOCOLATE_SHOP_EMAIL_PASSWORD
 const STRIPE_KEY = process.env.STRIPE_KEY
 const PRICE_ID = process.env.PRICE_ID
-const DOMAIN = 'http://localhost:5173'
+const DOMAIN = process.env.HOST || 'http://localhost:5173';
 
 const resolvers = {
   Query: {
@@ -181,8 +181,7 @@ const resolvers = {
       const secret = JWT_SECRET + user.passwordHash
       const token = jwt.sign({ email: user.email, id: user.id }, secret, { expiresIn: '5m'})
 
-      const resetURL = `http://localhost:5173/resetpasswordform?userId=${user.id}&token=${token}`;
-      console.log('Generated Reset URL:', resetURL);
+      const resetURL = `${DOMAIN}/resetpasswordform?userId=${user.id}&token=${token}`;      console.log('Generated Reset URL:', resetURL);
 
       const transporter = nodemailer.createTransport({
         service: "gmail",

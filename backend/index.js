@@ -1,5 +1,8 @@
 // index.js
-require('dotenv').config();
+require('dotenv').config({
+  path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
+});
+
 const express = require('express');
 const cors = require('cors');
 const productsRouter = require('./routes/productRoutes')
@@ -36,12 +39,28 @@ const server = new ApolloServer({
 })
 const app = express();
 const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || 'localhost';
 
 app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+const allowedOrigins = ['http://localhost:5173'];
+
+// Set up CORS middleware
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Allow cookies and authorization headers
+}));
 
 // Stripe webhook routes
 app.use('/api/webhook', stripeRouter);
@@ -50,12 +69,11 @@ const startServer = async () => {
   await connectToDatabase()
 
   await server.start()
-  server.applyMiddleware({ app, path: '/graphql' })
+  server.applyMiddleware({ app, path: process.env.GRAPHQL_PATH || '/graphql' });
 
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-    console.log(`GraphQL endpoint: http://localhost:${PORT}${server.graphqlPath}`)
-  })
+    console.log(`Server running on http://${HOST}:${PORT}`);
+    console.log(`GraphQL endpoint: http://${HOST}:${PORT}${server.graphqlPath}`);  })
 }
 
 startServer().catch((error) => {
