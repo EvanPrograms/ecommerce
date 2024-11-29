@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
+    "cross-env": "^7.0.3",
     "vite": "latest"
   }
 }
