@@ -45,8 +45,14 @@ app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
 
 // Middleware
 app.use(express.json());
-const allowedOrigins = ['http://localhost:5173', 'http://18.216.2.204', 'https://passionchocolates.com'];
-
+const allowedOrigins = [
+  'http://localhost:5173', 
+   process.env.HOST, 
+  'http://passionchocolates.com',  // Allow HTTP as well for now
+  'http://www.passionchocolates.com',
+  'https://passionchocolates.com', // You can add this once you enable HTTPS
+  'https://www.passionchocolates.com'
+];
 // Set up CORS middleware
 app.use(cors({
   origin: (origin, callback) => {
