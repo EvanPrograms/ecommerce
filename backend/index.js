@@ -45,7 +45,7 @@ app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
 
 // Middleware
 app.use(express.json());
-const allowedOrigins = ['http://localhost:5173', 'http://3.145.14.244'];
+const allowedOrigins = ['http://localhost:5173', 'http://18.216.2.204', 'https://passionchocolates.com'];
 
 // Set up CORS middleware
 app.use(cors({
