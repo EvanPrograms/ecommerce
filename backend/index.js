@@ -47,8 +47,7 @@ app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
 app.use(express.json());
 const allowedOrigins = [
   'http://localhost:5173', 
-  `http://${process.env.HOST}`,
-  `https://${process.env.HOST}`,
+   process.env.HOST,
   'http://passionchocolates.com',
   'http://www.passionchocolates.com',
   'https://passionchocolates.com', // You can add this once you enable HTTPS
