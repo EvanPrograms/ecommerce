@@ -2,7 +2,7 @@
 require('dotenv').config({
   path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
 });
-
+const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
 const productsRouter = require('./routes/productRoutes')
@@ -78,10 +78,25 @@ const startServer = async () => {
   await server.start()
   server.applyMiddleware({ app, path: process.env.GRAPHQL_PATH || '/graphql' });
 
-  app.listen(PORT, () => {
-    console.log(`Server running on http://${HOST}:${PORT}`);
-    console.log(`GraphQL endpoint: http://${HOST}:${PORT}${server.graphqlPath}`);  })
-}
+  if (process.env.NODE_ENV === 'production') {
+    // Production: Use HTTPS
+    const sslOptions = {
+      key: fs.readFileSync('/etc/letsencrypt/live/passionchocolates.com/privkey.pem'),
+      cert: fs.readFileSync('/etc/letsencrypt/live/passionchocolates.com/fullchain.pem'),
+    };
+    const https = require('https');
+    https.createServer(sslOptions, app).listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on https://${HOST}:${PORT}`);
+      console.log(`GraphQL endpoint: https://${HOST}:${PORT}${server.graphqlPath}`);
+    });
+  } else {
+    // Development: Use HTTP
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on http://${HOST}:${PORT}`);
+      console.log(`GraphQL endpoint: http://${HOST}:${PORT}${server.graphqlPath}`);
+    });
+  }
+};
 
 startServer().catch((error) => {
   console.error('Error starting server:', error)
