@@ -9,7 +9,7 @@ const CHOCOLATE_SHOP_EMAIL = process.env.CHOCOLATE_SHOP_EMAIL
 const CHOCOLATE_SHOP_EMAIL_PASSWORD = process.env.CHOCOLATE_SHOP_EMAIL_PASSWORD
 const STRIPE_KEY = process.env.STRIPE_KEY
 const PRICE_ID = process.env.PRICE_ID
-const DOMAIN = process.env.HOST ? (process.env.HOST.startsWith('http') ? process.env.HOST : `http://${process.env.HOST}`) : 'http://localhost:5173';
+const DOMAIN = process.env.HOST
 
 const resolvers = {
   Query: {
