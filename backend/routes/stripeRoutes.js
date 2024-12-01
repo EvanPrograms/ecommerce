@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const router = express.Router();
 const Order = require('../models/order')
+const Cart = require('../models/cart')
 
 const STRIPE_KEY = process.env.STRIPE_KEY
 const endpointSecret = process.env.WEBHOOK_SECRET
@@ -51,6 +52,15 @@ router.post('/', bodyParser.raw({ type: 'application/json '}), async (request, r
         });
 
         console.log('Order created for session:', session.id);
+
+        if (userId) {
+          // Authenticated user - reset their cart
+          await Cart.destroy({ where: { userId: parseInt(userId, 10) } });
+        } else {
+          // Guest user - reset cart for guest (identified by null userId)
+          await Cart.destroy({ where: { userId: null } });
+        }
+
       } catch (error) {
         console.error('Error creating order:', error.message);
       }

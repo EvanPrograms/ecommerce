@@ -320,9 +320,9 @@ const resolvers = {
           }
         }
         
-        await Cart.destroy({
-          where: { userId: context.currentUser.id },
-        });
+        // await Cart.destroy({
+        //   where: { userId: context.currentUser.id },
+        // });
       } else if (userType === 'authenticated') {
         throw new Error('Not authenticated')
       }
