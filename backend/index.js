@@ -84,14 +84,14 @@ const startServer = async () => {
     };
     const https = require('https');
     https.createServer(sslOptions, app).listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running on https://${HOST}:${PORT}`);
-      console.log(`GraphQL endpoint: https://${HOST}:${PORT}${server.graphqlPath}`);
+      console.log(`Server running on ${HOST}:${PORT}`);
+      console.log(`GraphQL endpoint: ${HOST}:${PORT}${server.graphqlPath}`);
     });
   } else {
     // Development: Use HTTP
     app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running on http://${HOST}:${PORT}`);
-      console.log(`GraphQL endpoint: http://${HOST}:${PORT}${server.graphqlPath}`);
+      console.log(`Server running on ${HOST}:${PORT}`);
+      console.log(`GraphQL endpoint: ${HOST}:${PORT}${server.graphqlPath}`);
     });
   }
 };
