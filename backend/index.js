@@ -2,6 +2,7 @@
 require('dotenv').config({
   path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
 });
+const logger = require('./logger')
 const fs = require('fs');
 const express = require('express');
 const cors = require('cors');
@@ -32,7 +33,7 @@ const server = new ApolloServer({
         const currentUser = await User.findByPk(decodedToken.id)
         return { currentUser };
       } catch (error) {
-        console.error('Token verification error:', error);
+        logger.error('Token verification error: ' + error.message);
       }
     }
   } 
@@ -40,6 +41,11 @@ const server = new ApolloServer({
 const app = express();
 const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || 'localhost';
+
+app.use((req, res, next) => {
+  logger.info(`Incoming request: ${req.method} ${req.originalUrl}`); // Log HTTP requests
+  next();
+});
 
 app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
 
@@ -60,7 +66,7 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.log(`Blocked origin: ${origin}`);
+      logger.warn(`Blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -72,6 +78,7 @@ app.use('/api/webhook', stripeRouter);
 
 const startServer = async () => {
   await connectToDatabase()
+  logger.info('Connected to the database');
 
   await server.start()
   server.applyMiddleware({ app, path: process.env.GRAPHQL_PATH || '/graphql' });
@@ -84,18 +91,18 @@ const startServer = async () => {
     };
     const https = require('https');
     https.createServer(sslOptions, app).listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running on ${HOST}:${PORT}`);
-      console.log(`GraphQL endpoint: ${HOST}:${PORT}${server.graphqlPath}`);
+      logger.info(`Server running on ${HOST}:${PORT}`);
+      logger.info(`GraphQL endpoint: ${HOST}:${PORT}${server.graphqlPath}`)
     });
   } else {
     // Development: Use HTTP
     app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running on ${HOST}:${PORT}`);
-      console.log(`GraphQL endpoint: ${HOST}:${PORT}${server.graphqlPath}`);
+        logger.info(`Server running on ${HOST}:${PORT}`);
+        logger.info(`GraphQL endpoint: ${HOST}:${PORT}${server.graphqlPath}`);
     });
   }
 };
 
 startServer().catch((error) => {
-  console.error('Error starting server:', error)
+  logger.error('Error in server start: ' + error.message);
 })
