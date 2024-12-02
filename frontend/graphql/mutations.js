@@ -51,7 +51,7 @@ export const GET_USER_CART = gql`
 
 export const UPDATE_USER_CART = gql`
   mutation UpdateUserCart($userId: ID, $guestSessionId: String, $cart: [CartItemInput!]!) {
-    updateUserCart(userId: $userId, $guestSessionId: $guestSessionId, cart: $cart) {
+    updateUserCart(userId: $userId, guestSessionId: $guestSessionId, cart: $cart) {
       message
       errors {
         field
