@@ -141,15 +141,10 @@ const resolvers = {
 
       return { user, token }
     },
-    updateUserCart: async (_, { userId, cart, guestSessionId }, context) => {
+    updateUserCart: async (_, { userId, guestSessionId, cart }, context) => {
       // Iterate through each item in the cart
-      const currentUser = context.currentUser
-      if (!currentUser) {
-        throw new Error('not authenticated')
-      }
-
-      if (parseInt(context.currentUser.id, 10) !== parseInt(userId, 10)) {
-        throw new Error('Unauthorized to update this cart')
+      if (!userId && !guestSessionId) {
+        throw new Error('Either userId or guestSessionId must be provided')
       }
 
       const cartData = cart.map(item => ({

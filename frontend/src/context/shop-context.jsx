@@ -34,7 +34,6 @@ export const getDefaultCart = (productsLength) => {
 const useCartUpdate = (mutation) => {
   const { user } = useContext(AuthContext);
   const updateCart = (newCart) => {
-    const guestSessionId = generateGuestSessionId()
 
     if (user?.id) {
       const cart = Object.keys(newCart).map(productId => ({
@@ -43,6 +42,7 @@ const useCartUpdate = (mutation) => {
       }));
       mutation.mutate({ userId: user.id, cart });
     } else {
+      const guestSessionId = generateGuestSessionId()
       const cart = Object.keys(newCart).map(productId => ({
         productId,
         quantity: newCart[productId],
@@ -93,6 +93,17 @@ export const ShopContextProvider = (props) => {
     ),
     enabled: !!user
   });
+
+  useEffect(() => {
+    if (!user) {
+      // Reset the cart when user logs out and use localStorage for guest users
+      const savedCart = JSON.parse(localStorage.getItem('cartItems')) || {};
+      setCartItems(savedCart);
+    } else {
+      refetchCart()
+    }
+  }, [user, products]);
+  
 
   useEffect(() => {
     if (userCartData) {
