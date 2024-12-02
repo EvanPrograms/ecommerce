@@ -141,7 +141,7 @@ const resolvers = {
 
       return { user, token }
     },
-    updateUserCart: async (_, { userId, cart }, context) => {
+    updateUserCart: async (_, { userId, cart, guestSessionId }, context) => {
       // Iterate through each item in the cart
       const currentUser = context.currentUser
       if (!currentUser) {
@@ -152,12 +152,21 @@ const resolvers = {
         throw new Error('Unauthorized to update this cart')
       }
 
-      for (const item of cart) {
-        const { productId, quantity } = item;
-    
-        // Check if the cart item already exists for this user and product
+      const cartData = cart.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        userId: currentUser ? currentUser.id : null, // Authenticated user
+        guestSessionId: guestSessionId || null, // Guest user
+      }));
+
+
+      for (const item of cartData) {
         const existingCartItem = await Cart.findOne({
-          where: { userId, productId }
+          where: { 
+            userId: item.userId, 
+            productId: item.productId,
+            guestSessionId: item.guestSessionId
+          }
         });
     
         if (existingCartItem) {
@@ -165,11 +174,7 @@ const resolvers = {
           await existingCartItem.update({ quantity });
         } else {
           // If it doesn't exist, create a new cart entry
-          await Cart.create({
-            userId,
-            productId,
-            quantity,
-          });
+          await Cart.create({item});
         }
       }
     
@@ -236,6 +241,8 @@ const resolvers = {
       const stripe = require('stripe')(STRIPE_KEY)
       const randomValue = uuidv4()
 
+      const guestSessionId = context.currentUser ? null : uuidv4()
+
       try {
         const session = await stripe.checkout.sessions.create({
           line_items: cartItems.map((item) => ({
@@ -255,6 +262,7 @@ const resolvers = {
           },
           metadata: {
             userId: context.currentUser ? context.currentUser.id : null, // Pass userId if authenticated
+            guestSessionId: guestSessionId,
             cartItems: JSON.stringify(cartItems), // Pass cart items as JSON
           },
         })
@@ -278,14 +286,21 @@ const resolvers = {
       }
     },
     clearCart: async (_, __, context) => {
-      if (!context.currentUser) {
-        throw new Error('Not Authenticated')
+      const currentUser = context.currentUser
+      const guestSessionId = context.guestSessionId
+
+      if (!context.currentUser && !guestSessionId) {
+        throw new Error('Not Authenticated or guest session missing')
       }
       
       try {
-        await Cart.destroy({
-          where: { userId: context.currentUser.id }
-        })
+        if (currentUser) {
+          await Cart.destroy({
+            where: { userId: context.currentUser.id }
+          })
+        } else {
+          await Cart.destroy({ where: { guestSessionId } })
+        }
         return true
       } catch (error) {
         console.error('Error clearing cart: ', error)

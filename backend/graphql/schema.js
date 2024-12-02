@@ -28,7 +28,8 @@ const typeDefs = gql`
 
   input CartItemInput { 
     productId: ID!
-    quantity: Int!
+    quantity: Int!,
+    guestSessionId: String
   }
 
   input StripeCartItemInput {

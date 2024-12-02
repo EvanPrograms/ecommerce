@@ -10,8 +10,18 @@ import {
   GET_PRODUCTS,
   CREATE_REVIEW
 } from '../../graphql/mutations'
+const { v4: uuidv4 } = require('uuid');
 
 export const ShopContext = createContext(null)
+
+const generateGuestSessionId = () => {
+  let guestSessionId = localStorage.getItem('guestSessionId')
+  if (!guestSessionId) {
+    guestSessionId = uuidv4()
+    localStorage.setItem('guestSessionId', guestSessionId)
+  }
+  return guestSessionId
+}
 
 export const getDefaultCart = (productsLength) => {
   let cart = {}
@@ -24,12 +34,21 @@ export const getDefaultCart = (productsLength) => {
 const useCartUpdate = (mutation) => {
   const { user } = useContext(AuthContext);
   const updateCart = (newCart) => {
+    const guestSessionId = generateGuestSessionId()
+
     if (user?.id) {
       const cart = Object.keys(newCart).map(productId => ({
         productId,
-        quantity: newCart[productId],
+        quantity: newCart[productId]
       }));
       mutation.mutate({ userId: user.id, cart });
+    } else {
+      const cart = Object.keys(newCart).map(productId => ({
+        productId,
+        quantity: newCart[productId],
+        guestSessionId
+      }))
+      mutation.mutate( guestSessionId, cart )
     }
   };
   return updateCart;
@@ -40,6 +59,7 @@ export const ShopContextProvider = (props) => {
   const client = useApolloClient()
 
   const [userReviews, setUserReviews] = useState([])
+
 
   const { data: products, error, isLoading, refetch } = useQuery({
     queryKey: ['products'],
@@ -88,9 +108,9 @@ export const ShopContextProvider = (props) => {
   }, [user, products]);
 
   const mutation = useMutation({
-    mutationFn: ({ userId, cart }) => client.mutate({
+    mutationFn: ({ userId, cart, guestSessionId }) => client.mutate({
       mutation: UPDATE_USER_CART,
-      variables: { userId, cart }
+      variables: { userId, cart, guestSessionId }
     }),
     onSuccess: () => {
       console.log("Cart updated successfully")
@@ -147,7 +167,8 @@ export const ShopContextProvider = (props) => {
       }
     } else {
       // Reset to getDefaultCart for non-authenticated users
-      setCartItems(getDefaultCart(products?.length || 0));
+      const savedCart = JSON.parse(localStorage.getItem('cartItems')) || {}
+      setCartItems(savedCart);
     }
   };
 

@@ -12,11 +12,15 @@ Cart.init({
   },
   userId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: 'users',
       key: 'id'
     }
+  },
+  guestSessionId: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
   productId: {
     type: DataTypes.INTEGER,
