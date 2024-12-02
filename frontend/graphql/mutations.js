@@ -50,7 +50,7 @@ export const GET_USER_CART = gql`
 `;
 
 export const UPDATE_USER_CART = gql`
-  mutation UpdateUserCart($userId: ID, $cart: [CartItemInput!]!) {
+  mutation UpdateUserCart($userId: ID!, $cart: [CartItemInput!]!) {
     updateUserCart(userId: $userId, cart: $cart) {
       message
       errors {

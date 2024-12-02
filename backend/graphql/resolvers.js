@@ -152,7 +152,7 @@ const resolvers = {
       const cartData = cart.map(item => ({
         productId: item.productId,
         quantity: item.quantity,
-        userId: currentUser.d, // Authenticated user
+        userId: currentUser.id, // Authenticated user
       }));
 
 

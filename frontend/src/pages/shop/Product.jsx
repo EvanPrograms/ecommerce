@@ -20,7 +20,7 @@ const Product = (props) => {
   const handleNavigateDetails = () => {
     navigate(`/product/${id}`)
   }
-  console.log(cartItemAmount)
+  // console.log(cartItemAmount)
 
   return (
     <div className="product" >
