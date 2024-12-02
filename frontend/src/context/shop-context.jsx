@@ -14,15 +14,6 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const ShopContext = createContext(null)
 
-const generateGuestSessionId = () => {
-  let guestSessionId = localStorage.getItem('guestSessionId')
-  if (!guestSessionId) {
-    guestSessionId = uuidv4()
-    localStorage.setItem('guestSessionId', guestSessionId)
-  }
-  return guestSessionId
-}
-
 export const getDefaultCart = (productsLength) => {
   let cart = {}
   for (let i = 1; i < productsLength + 1; i++) {
@@ -33,24 +24,21 @@ export const getDefaultCart = (productsLength) => {
 
 const useCartUpdate = (mutation) => {
   const { user } = useContext(AuthContext);
+
   const updateCart = (newCart) => {
+    const cart = Object.keys(newCart).map(productId => ({
+      productId,
+      quantity: newCart[productId],
+    }));
 
     if (user?.id) {
-      const cart = Object.keys(newCart).map(productId => ({
-        productId,
-        quantity: newCart[productId]
-      }));
       mutation.mutate({ userId: user.id, cart });
     } else {
-      const guestSessionId = generateGuestSessionId()
-      const cart = Object.keys(newCart).map(productId => ({
-        productId,
-        quantity: newCart[productId],
-        guestSessionId
-      }))
-      mutation.mutate( guestSessionId, cart )
+      console.log("Updating guest cart in localStorage:", newCart);
+      localStorage.setItem('cartItems', JSON.stringify(newCart))
     }
   };
+
   return updateCart;
 };
 
@@ -59,7 +47,6 @@ export const ShopContextProvider = (props) => {
   const client = useApolloClient()
 
   const [userReviews, setUserReviews] = useState([])
-
 
   const { data: products, error, isLoading, refetch } = useQuery({
     queryKey: ['products'],
@@ -95,33 +82,34 @@ export const ShopContextProvider = (props) => {
   });
 
   useEffect(() => {
-    if (!user) {
-      // Reset the cart when user logs out and use localStorage for guest users
+    if (user) {
+      refetchCart(); // Refetch cart for the logged-in user
+    } else {
       const savedCart = JSON.parse(localStorage.getItem('cartItems')) || {};
-      setCartItems(savedCart);
+      setCartItems(savedCart); // For guest, use cart from localStorage
+    }
+  }, [user, products]);
+
+  const handleOrderCompleted = () => {
+    if (!user) {
+      localStorage.removeItem('cartItems');
     } else {
       refetchCart()
     }
-  }, [user, products]);
+  };
+  
+  useEffect(() => {
+    window.addEventListener('orderCompleted', handleOrderCompleted);
+    return () => {
+      window.removeEventListener('orderCompleted', handleOrderCompleted);
+    };
+  }, [user]);
   
 
-  useEffect(() => {
-    if (userCartData) {
-      setCartItems(prev => ({...prev, ...userCartData }))
-    }
-  }, [userCartData])
-
-  useEffect(() => {
-    if (!user) {
-      // Reset the cart when user logs out
-      setCartItems(getDefaultCart(products?.length));
-    }
-  }, [user, products]);
-
   const mutation = useMutation({
-    mutationFn: ({ userId, cart, guestSessionId }) => client.mutate({
+    mutationFn: ({ userId, cart }) => client.mutate({
       mutation: UPDATE_USER_CART,
-      variables: { userId, cart, guestSessionId }
+      variables: { userId, cart }
     }),
     onSuccess: () => {
       console.log("Cart updated successfully")
@@ -170,7 +158,7 @@ export const ShopContextProvider = (props) => {
         }, {});
   
         // Reset to getDefaultCart if the cart is empty
-        setCartItems(Object.keys(newCart).length > 0 ? newCart : getDefaultCart(products?.length || 0));
+        setCartItems(newCart);
       } catch (error) {
         console.error("Error refetching cart:", error);
         // On error, reset to getDefaultCart

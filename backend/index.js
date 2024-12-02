@@ -62,7 +62,7 @@ const allowedOrigins = [
 // Set up CORS middleware
 app.use(cors({
   origin: (origin, callback) => {
-    console.log(`Incoming origin: ${origin}`);
+    // console.log(`Incoming origin: ${origin}`);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {

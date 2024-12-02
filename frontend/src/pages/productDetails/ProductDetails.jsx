@@ -91,7 +91,7 @@ const ProductDetails = () => {
           <p className="product-description">{product.description}</p>
           <p className="product-price">Price: ${(product.price / 100).toFixed(2)}</p>
           <p className="product-total-ordered">{product.totalQuantityOrdered} bought by Happy People!</p>
-          <button className="add-to-cart-button" onClick={() => addToCart(id)}>Add to Cart {cartItemAmount !== 0 && <>({cartItemAmount})</>}</button>
+          <button className="add-to-cart-button" onClick={() => addToCart(id)}>Add to Cart {cartItemAmount !== undefined && cartItemAmount !== 0 && <>({cartItemAmount})</>}</button>
         </div>
       </div>
       <div>

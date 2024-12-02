@@ -33,33 +33,26 @@ router.post('/', bodyParser.raw({ type: 'application/json '}), async (request, r
       console.log('Checkout session completed:', session);
 
       try {
-        // Extract data from session
         const userId = session.metadata.userId; // Assuming `userId` is passed in metadata
         const cartItems = JSON.parse(session.metadata.cartItems); // Assuming `cartItems` is stored in metadata
         const totalPrice = session.amount_total; // Total price from Stripe session
         const shippingAddress = session.shipping_details?.address;
 
-        // Create the order in your database
-        await Order.create({
-          userId: userId ? parseInt(userId, 10) : null, // Parse userId if it's provided
-          items: cartItems, // Use parsed cart items
-          totalPrice,
-          shippingAddress: shippingAddress
-            ? JSON.stringify(shippingAddress)
-            : null, // Convert address to string if exists
-          orderDate: new Date(),
-          sessionId: session.id,
-        });
-
-        console.log('Order created for session:', session.id);
-
         if (userId) {
-          // Authenticated user - reset their cart
+          await Order.create({
+            userId: userId ? parseInt(userId, 10) : null, // Parse userId if it's provided
+            items: cartItems, // Use parsed cart items
+            totalPrice,
+            shippingAddress: shippingAddress
+              ? JSON.stringify(shippingAddress)
+              : null, // Convert address to string if exists
+            orderDate: new Date(),
+            sessionId: session.id,
+          });
           await Cart.destroy({ where: { userId: parseInt(userId, 10) } });
-        } else {
-          // Guest user - reset cart for guest (identified by null userId)
-          await Cart.destroy({ where: { userId: null } });
         }
+
+        return response.status(200).send('Event successful');
 
       } catch (error) {
         console.error('Error creating order:', error.message);

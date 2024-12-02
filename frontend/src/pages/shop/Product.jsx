@@ -20,6 +20,7 @@ const Product = (props) => {
   const handleNavigateDetails = () => {
     navigate(`/product/${id}`)
   }
+  console.log(cartItemAmount)
 
   return (
     <div className="product" >
@@ -50,7 +51,7 @@ const Product = (props) => {
           className="addToCartBttn"
           onClick={() => addToCart(id)}
           >
-          Add to Cart {cartItemAmount !== 0 && <>({cartItemAmount})</>}
+          Add to Cart {cartItemAmount !== undefined && cartItemAmount !== 0 && <>({cartItemAmount})</>}
         </button>
     </div>
   )

@@ -25,11 +25,9 @@ const Cart = () => {
         quantity: cartItems[product.id]
       }))
 
-      const guestSessionId = localStorage.getItem('guestSessionId');
-
       try {
         const { data } = await createCheckoutSession({
-          variables: { cartItems: cartDetails, guestSessionId }
+          variables: { cartItems: cartDetails }
         })
         if (data?.createCheckoutSession?.url) {
           window.location.href = data.createCheckoutSession.url

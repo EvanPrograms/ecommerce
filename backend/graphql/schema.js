@@ -28,8 +28,7 @@ const typeDefs = gql`
 
   input CartItemInput { 
     productId: ID!
-    quantity: Int!,
-    guestSessionId: String
+    quantity: Int!
   }
 
   input StripeCartItemInput {
@@ -117,7 +116,7 @@ const typeDefs = gql`
   type Mutation {
     createUser(email: String!, name: String!, password: String!): User!
     login(email: String!, password: String!): AuthPayload!
-    updateUserCart(userId: ID!, guestSessionId: String, cart: [CartItemInput!]!) : CartUpdateResponse!
+    updateUserCart(userId: ID, cart: [CartItemInput!]!) : CartUpdateResponse!
     requestPasswordReset(email: String!) : Boolean!
     resetPassword(userId: ID!, token: String!, newPassword: String!): Boolean!
     createCheckoutSession(cartItems: [StripeCartItemInput!]!): CheckoutSessionResponse!

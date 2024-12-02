@@ -12,37 +12,34 @@ const Success = () => {
   const hasValidated = useRef(false);
 
   useEffect(() => {
-    refetchProducts()
-  }, [refetchProducts])
+    refetchProducts();  // Refetch products to ensure we have the latest data
+  }, [refetchProducts]);
 
   useEffect(() => {
     const handleValidation = async () => {
-      if (hasValidated.current) return; // Prevent multiple calls
+      if (hasValidated.current) return;  // Prevent multiple calls
       hasValidated.current = true;
 
       try {
         const response = await validateSuccess({ variables: { randomValue } });
         console.log("Validation successful and Cart cleared:", response.data.validateSuccess.success);
-        setCartItems(getDefaultCart(products?.length))
-        // Only refetch cart if the user is authenticated
-        if (response.data.validateSuccess.userType !== "guest") {
-          await refetchCart();
-        } else {
-          console.log("Guest checkout, no cart to refetch.");
-        }
+        await refetchCart()
+
       } catch (error) {
         if (error.message.includes('Cannot read properties of undefined')) {
-          console.error('Guest checkout with no user ID, treating as guest')
+          console.error('Guest checkout with no user ID, treating as guest');
+          localStorage.removeItem('cartItems');
+          console.log("Guest checkout, cart cleared from localStorage.");
+          setCartItems(getDefaultCart(products?.length));
         } else {
           console.error("Validation Failed:", error);
-          navigate("/not-found", { replace: true })
+          navigate("/not-found", { replace: true });
         }
-        
       }
     };
 
     handleValidation();
-  }, [randomValue, validateSuccess, refetchCart]);
+  }, [randomValue, validateSuccess, refetchCart, products?.length]);
 
   return (
     <div>
@@ -50,6 +47,5 @@ const Success = () => {
     </div>
   );
 };
-
 
 export default Success;

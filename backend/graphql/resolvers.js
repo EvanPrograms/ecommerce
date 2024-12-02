@@ -141,17 +141,18 @@ const resolvers = {
 
       return { user, token }
     },
-    updateUserCart: async (_, { userId, guestSessionId, cart }, context) => {
+    updateUserCart: async (_, { userId, cart }, context) => {
       // Iterate through each item in the cart
-      if (!userId && !guestSessionId) {
-        throw new Error('Either userId or guestSessionId must be provided')
+      const currentUser = context.currentUser
+
+      if (!userId) {
+        throw new Error('No user id')
       }
 
       const cartData = cart.map(item => ({
         productId: item.productId,
         quantity: item.quantity,
-        userId: currentUser ? currentUser.id : null, // Authenticated user
-        guestSessionId: guestSessionId || null, // Guest user
+        userId: currentUser.d, // Authenticated user
       }));
 
 
@@ -159,17 +160,16 @@ const resolvers = {
         const existingCartItem = await Cart.findOne({
           where: { 
             userId: item.userId, 
-            productId: item.productId,
-            guestSessionId: item.guestSessionId
+            productId: item.productId
           }
         });
     
         if (existingCartItem) {
           // If it exists, update the quantity
-          await existingCartItem.update({ quantity });
+          await existingCartItem.update({ quantity: item.quantity });
         } else {
           // If it doesn't exist, create a new cart entry
-          await Cart.create({item});
+          await Cart.create(item);
         }
       }
     
@@ -236,8 +236,6 @@ const resolvers = {
       const stripe = require('stripe')(STRIPE_KEY)
       const randomValue = uuidv4()
 
-      const guestSessionId = context.currentUser ? null : uuidv4()
-
       try {
         const session = await stripe.checkout.sessions.create({
           line_items: cartItems.map((item) => ({
@@ -256,8 +254,7 @@ const resolvers = {
             allowed_countries: ['US', 'CA']
           },
           metadata: {
-            userId: context.currentUser ? context.currentUser.id : null, // Pass userId if authenticated
-            guestSessionId: guestSessionId,
+            userId: context.currentUser ? context.currentUser.id : null,
             cartItems: JSON.stringify(cartItems), // Pass cart items as JSON
           },
         })
@@ -282,20 +279,15 @@ const resolvers = {
     },
     clearCart: async (_, __, context) => {
       const currentUser = context.currentUser
-      const guestSessionId = context.guestSessionId
 
-      if (!context.currentUser && !guestSessionId) {
-        throw new Error('Not Authenticated or guest session missing')
+      if (!currentUser) {
+        throw new Error('Not Authenticated')
       }
       
       try {
-        if (currentUser) {
-          await Cart.destroy({
-            where: { userId: context.currentUser.id }
-          })
-        } else {
-          await Cart.destroy({ where: { guestSessionId } })
-        }
+        await Cart.destroy({
+          where: { userId: context.currentUser.id }
+        })
         return true
       } catch (error) {
         console.error('Error clearing cart: ', error)
@@ -312,7 +304,8 @@ const resolvers = {
         throw new Error('Invalid or expired success link')
       }
 
-      const userType = sessionData.userId ? 'authenticated' : 'guest'
+      const userType = sessionData.userId && sessionData.userId !== '' ? 'authenticated' : 'guest';
+      console.log('This is userType', userType)
 
       if (userType === 'authenticated' && context.currentUser?.id === sessionData.userId) {
         const order = await Order.findOne({
@@ -329,11 +322,9 @@ const resolvers = {
             await product.increment('totalQuantityOrdered', { by: item.quantity})
           }
         }
-        
-        // await Cart.destroy({
-        //   where: { userId: context.currentUser.id },
-        // });
-      } else if (userType === 'authenticated') {
+      } else if (userType === 'guest') {
+        console.log("Guest checkout, no user ID found.");
+      } else {
         throw new Error('Not authenticated')
       }
 
