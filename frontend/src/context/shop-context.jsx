@@ -10,7 +10,7 @@ import {
   GET_PRODUCTS,
   CREATE_REVIEW
 } from '../../graphql/mutations'
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
 export const ShopContext = createContext(null)
 
