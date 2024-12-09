@@ -76,7 +76,11 @@ const ProductDetails = () => {
     </select>
   );
 
-  const formatRating = (rating) => {
+  const formatRating = (rating, reviewCount) => {
+    if (reviewCount === 0) {
+      return "No reviews yet"
+    }
+
     const fullStars = Math.floor(rating);
     const halfStars = (rating % 1) >= 0.5 ? 1 : 0; 
     const emptyStars = 5 - fullStars - halfStars; 
@@ -101,7 +105,7 @@ const ProductDetails = () => {
           <h1>{product.name}</h1>
           <p className="product-description">{product.description}</p>
           <p className="product-price">Price: ${(product.price / 100).toFixed(2)}</p>
-          <p className="product-rating">Rating: {formatRating(product.averageRating)}</p>
+          <p className="product-rating">Rating: {formatRating(product.averageRating, product.reviewCount)}</p>
           <p className="product-total-ordered">{product.totalQuantityOrdered} bought by Happy People!</p>
           <button className="add-to-cart-button" onClick={() => addToCart(id)}>Add to Cart {cartItemAmount !== undefined && cartItemAmount !== 0 && <>({cartItemAmount})</>}</button>
         </div>
