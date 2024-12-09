@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import Home from './pages/Home';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/home/Home.jsx';
 import Shop from './pages/shop/Shop'
 import ProductDetails from './pages/productDetails/ProductDetails';
 import Cart from './pages/cart/Cart';
@@ -14,7 +14,6 @@ import ResetPasswordSubmission from './pages/login/ResetPasswordSubmission';
 
 import { ShopContextProvider } from './context/shop-context';
 import { AuthContextProvider } from './context/auth-context'
-// import Checkout from './pages/Checkout';
 
 const App = () => {
   

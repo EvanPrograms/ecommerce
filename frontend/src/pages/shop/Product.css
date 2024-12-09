@@ -1,0 +1,103 @@
+/* Product Card Layout */
+.product {
+  border-radius: 15px;
+  width: 300px;
+  height: auto; /* Adjust height to fit content */
+  margin: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 450px; /* Ensure the card has enough space */
+}
+
+/* Product Image Styling */
+.product-img {
+  height: 200px; /* Set a fixed height for all images */
+  width: 100%; /* Make sure the image takes up the full width of the container */
+  object-fit: cover; /* Ensure the image covers the area without stretching */
+  border-radius: 10px; /* Rounded corners for the image */
+  margin-bottom: 15px; /* Space between image and description */
+  margin-top: 15px;
+  display: block; /* Ensure the image behaves as a block element */
+}
+
+/* Product Description Styling */
+.product .description {
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+  color: #d2a679; /* Light brown text color */
+  font-style: italic; /* Italic text */
+  word-wrap: break-word; /* Ensure long text wraps correctly */
+  flex-grow: 1; /* Allows the description to take remaining space */
+  margin-bottom: 10px; /* Reduced space between description and button */
+}
+
+/* Product Title Styling */
+.product .description p {
+  font-size: 1.1rem; /* Adjust font size */
+  margin: 5px 0; /* Reduced margin to bring text closer */
+  max-width: 100%; /* Ensure it fits the container */
+}
+
+/* Price Styling */
+.product .description p.price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #9b111e; /* Dark red for price */
+  margin-top: 5px; /* Reduced space between price and other elements */
+}
+
+/* Total Ordered Styling */
+.product .description p.total-ordered {
+  font-size: 1rem;
+  margin-bottom: 5px; /* Reduced space between total ordered and other elements */
+  color: #555;
+}
+
+/* Hover effect for product card */
+.product:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+  cursor: pointer;
+}
+
+/* Add to Cart Button Styling */
+.addToCartBttn {
+  background-color: #d2a679; /* Light brown background */
+  border: 2px solid transparent;
+  min-width: 100px;
+  padding: 12px 20px;
+  border-radius: 15px;
+  color: #9b111e; /* Dark red text */
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+  text-transform: none;
+  visibility: visible; /* Ensure the text is visible */
+  margin-top: auto; /* Push the button to the bottom */
+  margin-bottom: 10px; /* Ensure there is space between the button and the bottom of the card */
+  display: inline-block; /* Ensure button is displayed properly */
+  text-shadow: 0px 0px 1px black, 0px 0px 0px black; /* Text shadow for contrast */
+}
+
+/* Hover effect for Add to Cart button */
+.addToCartBttn:hover {
+  background-color: #a88c60; /* Darker shade of light brown on hover */
+  color: #fff; /* White text on hover for contrast */
+  transform: scale(1.05); /* Slight zoom effect on hover */
+  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+}
+
+/* Price Styling */
+.product .description p.price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #9b111e; /* Dark red for price */
+  margin-top: 10px;
+}

@@ -9,7 +9,7 @@ const CHOCOLATE_SHOP_EMAIL = process.env.CHOCOLATE_SHOP_EMAIL
 const CHOCOLATE_SHOP_EMAIL_PASSWORD = process.env.CHOCOLATE_SHOP_EMAIL_PASSWORD
 const STRIPE_KEY = process.env.STRIPE_KEY
 const PRICE_ID = process.env.PRICE_ID
-const DOMAIN = process.env.HOST
+const DOMAIN = process.env.HOST || 'http://localhost:5173';
 
 const resolvers = {
   Query: {
@@ -144,32 +144,32 @@ const resolvers = {
     updateUserCart: async (_, { userId, cart }, context) => {
       // Iterate through each item in the cart
       const currentUser = context.currentUser
-
-      if (!userId) {
-        throw new Error('No user id')
+      if (!currentUser) {
+        throw new Error('not authenticated')
       }
 
-      const cartData = cart.map(item => ({
-        productId: item.productId,
-        quantity: item.quantity,
-        userId: currentUser.id, // Authenticated user
-      }));
+      if (parseInt(context.currentUser.id, 10) !== parseInt(userId, 10)) {
+        throw new Error('Unauthorized to update this cart')
+      }
 
-
-      for (const item of cartData) {
+      for (const item of cart) {
+        const { productId, quantity } = item;
+    
+        // Check if the cart item already exists for this user and product
         const existingCartItem = await Cart.findOne({
-          where: { 
-            userId: item.userId, 
-            productId: item.productId
-          }
+          where: { userId, productId }
         });
     
         if (existingCartItem) {
           // If it exists, update the quantity
-          await existingCartItem.update({ quantity: item.quantity });
+          await existingCartItem.update({ quantity });
         } else {
           // If it doesn't exist, create a new cart entry
-          await Cart.create(item);
+          await Cart.create({
+            userId,
+            productId,
+            quantity,
+          });
         }
       }
     
@@ -254,7 +254,7 @@ const resolvers = {
             allowed_countries: ['US', 'CA']
           },
           metadata: {
-            userId: context.currentUser ? context.currentUser.id : null,
+            userId: context.currentUser ? context.currentUser.id : null, // Pass userId if authenticated
             cartItems: JSON.stringify(cartItems), // Pass cart items as JSON
           },
         })
@@ -278,9 +278,7 @@ const resolvers = {
       }
     },
     clearCart: async (_, __, context) => {
-      const currentUser = context.currentUser
-
-      if (!currentUser) {
+      if (!context.currentUser) {
         throw new Error('Not Authenticated')
       }
       
@@ -304,8 +302,7 @@ const resolvers = {
         throw new Error('Invalid or expired success link')
       }
 
-      const userType = sessionData.userId && sessionData.userId !== '' ? 'authenticated' : 'guest';
-      console.log('This is userType', userType)
+      const userType = sessionData.userId ? 'authenticated' : 'guest'
 
       if (userType === 'authenticated' && context.currentUser?.id === sessionData.userId) {
         const order = await Order.findOne({
@@ -322,9 +319,11 @@ const resolvers = {
             await product.increment('totalQuantityOrdered', { by: item.quantity})
           }
         }
-      } else if (userType === 'guest') {
-        console.log("Guest checkout, no user ID found.");
-      } else {
+        
+        await Cart.destroy({
+          where: { userId: context.currentUser.id },
+        });
+      } else if (userType === 'authenticated') {
         throw new Error('Not authenticated')
       }
 

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { ShopContext } from '../../context/shop-context'
 import { useNavigate } from "react-router-dom";
+import './Product.css';
 
 const Product = (props) => {
   const { 
@@ -22,6 +23,16 @@ const Product = (props) => {
   }
   // console.log(cartItemAmount)
 
+  const formatRating = (rating) => {
+    if (rating === 5.0) {
+      return '5 / 5';
+    } else if (rating === 0.0) {
+      return '0 / 5';
+    } else {
+      return `${rating.toFixed(1)} / 5`;
+    }
+  };
+
   return (
     <div className="product" >
         <span onClick={handleNavigateDetails}>
@@ -39,7 +50,7 @@ const Product = (props) => {
               </p>
             ) : (
               <p>
-                <b>Rating: {averageRating.toFixed(1)} / 5</b> <br />
+                <b>Rating: {formatRating(averageRating)}</b> <br />
                 <b>{reviewCount} Review{reviewCount > 1 && "s"}!</b>
               </p>
             )}

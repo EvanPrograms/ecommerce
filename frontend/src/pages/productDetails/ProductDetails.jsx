@@ -94,7 +94,7 @@ const ProductDetails = () => {
           <button className="add-to-cart-button" onClick={() => addToCart(id)}>Add to Cart {cartItemAmount !== undefined && cartItemAmount !== 0 && <>({cartItemAmount})</>}</button>
         </div>
       </div>
-      <div>
+      <div className="review-title">
         {user && existingReview ? (
           <div>
             <h3>Your Review:</h3>
@@ -129,15 +129,14 @@ const ProductDetails = () => {
             </button>
           </form>
         )}
-        {!user && <p>Please log in to leave a review!</p>}
+        {!user && <p className="no-review-message">Please log in to leave a review!</p>}
       </div>
       <div>
-        <h3>Reviews:</h3>
         {reviewsLoading ? (
           <p>Loading reviews...</p>
         ) : (
           reviewsData?.getReviews.map((review) => (
-            <div key={review.id}>
+            <div key={review.id} className="review">
               <p><strong>{review.stars} / 5:</strong> {review.review}</p>
               <p><em>Posted on {new Date(review.createdAt).toLocaleDateString()}</em></p>
             </div>

@@ -1,5 +1,4 @@
 import { createContext, useState, useEffect, useContext } from 'react'
-// import PRODUCTS from '../products'
 import { useQuery, useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { AuthContext } from './auth-context'

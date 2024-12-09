@@ -1,7 +1,11 @@
+
 .shopTitle {
   margin-top: 100px;
   text-align: center;
   font-size: 40px;
+  color: #d2a679;
+  text-shadow: 0px 0px 2px black, 0px 0px 0px black;
+  font-style: italic
 }
 .products {
   width: 100%;

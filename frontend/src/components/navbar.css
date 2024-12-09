@@ -1,21 +1,80 @@
+/* Ensure navbar spans full width of the viewport */
 .navbar {
-  width: 100%;
+  position: fixed; /* Keeps navbar fixed at the top */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Forces navbar to take up the full width of the viewport */
   height: 80px;
-  background-color: rgb(19, 19, 19) !important;
+  background: linear-gradient(45deg, #e20000, #9b111e); /* Gradient background */
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  padding: 0 20px; /* Adds space on the sides */
+  box-sizing: border-box;
+  z-index: 1000; /* Ensures navbar stays on top of other content */
 }
 
+/* Links inside navbar */
 .links {
-  margin-right: 50px;
   display: flex;
   align-items: center;
+  font-family: 'Arial', sans-serif;
+  flex-grow: 1;
+  justify-content: flex-end;
 }
 
-.links a {
+/* Navbar button links (Shop, Cart, etc.) */
+.links .MuiButton-root {
   text-decoration: none;
-  color: white;
+  color: #d2a679; /* Light brown color */
   margin-left: 20px;
-  font-size: 25px;
+  font-size: 16px;
+  font-style: italic; /* Make the text italic */
+  font-weight: 500;
+  text-shadow: 0px 0px 1px black, 0px 0px 0px black; /* Add text shadow */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+  border-radius: 5px;
+}
+
+/* Button hover effect */
+.links .MuiButton-root:hover {
+  background-color: #d9534f; /* Light red background on hover */
+  color: white; /* Ensure text stays white on hover */
+}
+
+/* Style for logged-in user's name and log out button */
+.loggedin em {
+  margin-right: 10px;
+  font-style: italic; /* Make the logged-in name italic */
+  color: #d2a679; /* Light brown color */
+  text-shadow: 0px 0px 1px black, 0px 0px 0px black; /* Add text shadow */
+}
+
+/* Style for 'Log out' button to match the text color */
+.loggedin .MuiButton-root {
+  color: #d2a679 !important; /* Light brown color for 'Log out' button */
+  font-style: italic;
+  text-shadow: 0px 0px 1px black, 0px 0px 0px black; /* Add text shadow */
+}
+
+/* Order History section */
+.orderhistory {
+  margin-left: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 10px; /* Adjust padding for smaller screens */
+  }
+
+  .links {
+    justify-content: space-between; /* Spread the links evenly */
+    width: 100%;
+  }
+
+  .links .MuiButton-root {
+    font-size: 14px; /* Smaller font size on mobile */
+    margin-left: 10px; /* Reduce margin between links */
+  }
 }

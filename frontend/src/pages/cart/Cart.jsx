@@ -1,5 +1,4 @@
 import React, { useContext } from "react"
-import PRODUCTS from '../../products'
 import { ShopContext } from "../../context/shop-context"
 import Product from '../shop/Product'
 import CartItem from "./CartItem"

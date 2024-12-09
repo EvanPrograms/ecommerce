@@ -27,7 +27,13 @@ const Navbar = () => {
   }, [user]);
 
   return (
-    <AppBar position="static" className="navbar" >
+    <AppBar 
+      position="fixed" 
+      className="navbar" 
+      sx={{ 
+        background: 'linear-gradient(45deg, #e20000, #9b111e)'  // Gradient similar to home.css
+      }}
+    >
       <Toolbar>
         <div className="links">
           <Button color="inherit" component={Link} to="/shop">

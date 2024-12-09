@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser')
 const router = express.Router();
 const Order = require('../models/order')
-const Cart = require('../models/cart')
 
 const STRIPE_KEY = process.env.STRIPE_KEY
 const endpointSecret = process.env.WEBHOOK_SECRET
@@ -33,27 +32,25 @@ router.post('/', bodyParser.raw({ type: 'application/json '}), async (request, r
       console.log('Checkout session completed:', session);
 
       try {
+        // Extract data from session
         const userId = session.metadata.userId; // Assuming `userId` is passed in metadata
         const cartItems = JSON.parse(session.metadata.cartItems); // Assuming `cartItems` is stored in metadata
         const totalPrice = session.amount_total; // Total price from Stripe session
         const shippingAddress = session.shipping_details?.address;
 
-        if (userId) {
-          await Order.create({
-            userId: userId ? parseInt(userId, 10) : null, // Parse userId if it's provided
-            items: cartItems, // Use parsed cart items
-            totalPrice,
-            shippingAddress: shippingAddress
-              ? JSON.stringify(shippingAddress)
-              : null, // Convert address to string if exists
-            orderDate: new Date(),
-            sessionId: session.id,
-          });
-          await Cart.destroy({ where: { userId: parseInt(userId, 10) } });
-        }
+        // Create the order in your database
+        await Order.create({
+          userId: userId ? parseInt(userId, 10) : null, // Parse userId if it's provided
+          items: cartItems, // Use parsed cart items
+          totalPrice,
+          shippingAddress: shippingAddress
+            ? JSON.stringify(shippingAddress)
+            : null, // Convert address to string if exists
+          orderDate: new Date(),
+          sessionId: session.id,
+        });
 
-        return response.status(200).send('Event successful');
-
+        console.log('Order created for session:', session.id);
       } catch (error) {
         console.error('Error creating order:', error.message);
       }
