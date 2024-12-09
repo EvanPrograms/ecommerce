@@ -24,11 +24,9 @@ usersRouter.post('/', async (request, response) => {
     response.status(201).json(savedUser);
   } catch (error) {
     if (error.name === 'SequelizeUniqueConstraintError') {
-      // Handle unique constraint error
       return response.status(409).json({ error: 'Email must be unique' });
     }
 
-    // Log the error and return a generic error response
     console.error('Error creating user:', error);
     response.status(500).json({ error: 'An error occurred while creating the user' });
   }

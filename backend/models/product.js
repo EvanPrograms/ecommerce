@@ -42,7 +42,6 @@ Product.init({
     defaultValue: 0
 
   }
-  // Add other product attributes as needed
 }, {
   sequelize,
   underscored: true,

@@ -1,23 +1,15 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialectOptions: {
-    // ssl: {
-    //   require: true,
-    //   rejectUnauthorized: false
-    // }
-  }
-})
+const sequelize = new Sequelize(process.env.DATABASE_URL);
 
 const connectToDatabase = async () => {
   try {
-    await sequelize.authenticate()
-    console.log('connected to the database')
+    await sequelize.authenticate();
+    console.log('Connected to the database');
   } catch (err) {
-    console.log('failed to connect to the database', err.message || err)
-    return process.exit(1)
+    console.error('Failed to connect to the database', err.message || err);
+    process.exit(1);
   }
-  return null
-}
+};
 
-module.exports = { sequelize, connectToDatabase }
+module.exports = { sequelize, connectToDatabase };

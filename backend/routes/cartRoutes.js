@@ -12,8 +12,6 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const { cartItems } = req.body
 
-  
-
   Object.keys(cartItems).forEach(id => {
     cart[id] = cartItems[id]
   })

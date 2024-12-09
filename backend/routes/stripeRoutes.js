@@ -1,15 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const router = express.Router();
-const Order = require('../models/order')
+const Order = require('../models/order');
 
-const STRIPE_KEY = process.env.STRIPE_KEY
-const endpointSecret = process.env.WEBHOOK_SECRET
+const STRIPE_KEY = process.env.STRIPE_KEY;
+const endpointSecret = process.env.WEBHOOK_SECRET;
 
-const stripe = require('stripe')(STRIPE_KEY)
+const stripe = require('stripe')(STRIPE_KEY);
 
 router.get('/', async (request, response) => {
-  response.send('testing get')
+  response.send('testing get');
 })
 
 router.post('/', bodyParser.raw({ type: 'application/json '}), async (request, response) => {
@@ -32,20 +32,18 @@ router.post('/', bodyParser.raw({ type: 'application/json '}), async (request, r
       console.log('Checkout session completed:', session);
 
       try {
-        // Extract data from session
-        const userId = session.metadata.userId; // Assuming `userId` is passed in metadata
-        const cartItems = JSON.parse(session.metadata.cartItems); // Assuming `cartItems` is stored in metadata
-        const totalPrice = session.amount_total; // Total price from Stripe session
+        const userId = session.metadata.userId;
+        const cartItems = JSON.parse(session.metadata.cartItems); 
+        const totalPrice = session.amount_total;
         const shippingAddress = session.shipping_details?.address;
 
-        // Create the order in your database
         await Order.create({
-          userId: userId ? parseInt(userId, 10) : null, // Parse userId if it's provided
-          items: cartItems, // Use parsed cart items
+          userId: userId ? parseInt(userId, 10) : null, 
+          items: cartItems,
           totalPrice,
           shippingAddress: shippingAddress
             ? JSON.stringify(shippingAddress)
-            : null, // Convert address to string if exists
+            : null,
           orderDate: new Date(),
           sessionId: session.id,
         });

@@ -1,25 +1,20 @@
-// index.js
 require('dotenv').config({
   path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development',
 });
 
 const express = require('express');
 const cors = require('cors');
-const productsRouter = require('./routes/productRoutes')
-const cartRouter = require('./routes/cartRoutes')
-const usersRouter = require('./routes/userRoutes')
-const loginRouter = require('./routes/loginRoutes')
-const stripeRouter = require('./routes/stripeRoutes')
-const { connectToDatabase } = require('./config/db')
-const { ApolloServer } = require('apollo-server-express')
-const typeDefs = require('./graphql/schema')
-const resolvers = require('./graphql/resolvers')
-const User = require('./models/user')
-const jwt = require('jsonwebtoken')
-const bodyParser = require('body-parser')
+const stripeRouter = require('./routes/stripeRoutes');
+const { connectToDatabase } = require('./config/db');
+const { ApolloServer } = require('apollo-server-express');
+const typeDefs = require('./graphql/schema');
+const resolvers = require('./graphql/resolvers');
+const User = require('./models/user');
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const server = new ApolloServer({ 
   typeDefs, 
@@ -36,21 +31,18 @@ const server = new ApolloServer({
       }
     }
   } 
-})
+});
 const app = express();
 const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || 'localhost';
 
 app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
 
-// Middleware
 app.use(express.json());
 const allowedOrigins = ['http://localhost:5173'];
 
-// Set up CORS middleware
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
@@ -59,10 +51,9 @@ app.use(cors({
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true, // Allow cookies and authorization headers
+  credentials: true, 
 }));
 
-// Stripe webhook routes
 app.use('/api/webhook', stripeRouter);
 
 const startServer = async () => {

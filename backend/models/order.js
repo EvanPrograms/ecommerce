@@ -18,7 +18,7 @@ Order.init({
     },
   },
   items: {
-    type: DataTypes.JSON, // Store items as JSON (e.g., array of { productId, quantity, price })
+    type: DataTypes.JSON, 
     allowNull: false,
   },
   totalPrice: {
@@ -26,7 +26,7 @@ Order.init({
     allowNull: false,
   },
   shippingAddress: {
-    type: DataTypes.JSON, // Store address details as JSON
+    type: DataTypes.JSON, 
     allowNull: true,
   },
   orderDate: {
