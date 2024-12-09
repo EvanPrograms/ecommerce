@@ -34,7 +34,6 @@ const App = () => {
             <Route path="/success/:randomValue" element={<Success />} />
             <Route path="/cancel" element={<Cancel />} />
             <Route path="/order-history" element={<OrderHistory />} />
-            {/* <Route path="/checkout" element={<Checkout />} /> */}
           </Routes>
         </Router>
       </ShopContextProvider>

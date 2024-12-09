@@ -1,0 +1,68 @@
+/* SignIn form styling */
+.form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.form label {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Sign In button styling */
+.form button {
+  background-color: #9b111e;
+  color: #d2a679 !important; /* Set text color to light brown */
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.form button:hover {
+  background-color: #7f2d0b;
+  color: #fff; /* Text color changes to white on hover */
+}
+
+/* Forgot Password link styling */
+.form .forgot-password {
+  background-color: #9b111e;
+  color: #d2a679 !important; /* Set text color to light brown */
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.form .forgot-password:hover {
+  color: #fff; /* Text color changes to white on hover */
+  font-size: 1.1rem;
+}
+
+/* Error message styling */
+.form .error {
+  color: #ff0000;
+  font-size: 0.9rem;
+}

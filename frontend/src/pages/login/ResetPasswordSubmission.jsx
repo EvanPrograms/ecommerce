@@ -1,9 +1,9 @@
-import { useParams } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { RESET_PASSWORD } from "../../../graphql/mutations";
 import { useMutation } from '@apollo/client';
 import { useSearchParams } from "react-router-dom";
+import './resetpasswordsubmission.css'
 
 const ResetPasswordSubmission = () => {
   const [searchParams] = useSearchParams()
@@ -39,20 +39,22 @@ const ResetPasswordSubmission = () => {
   }
 
   return (
-    <Formik
-      initialValues={{ newPassword: '' }}
-      validationSchema={signUpValidationSchema}
-      onSubmit={(values) => handleResetPassword(values)}
-    >
-      <Form>
-        <div>
-          <label htmlFor="newPassword">New Password</label>
-          <Field name="newPassword" type="password" />
-          <ErrorMessage name="newPassword" component="div" />
-        </div>
-        <button type="submit">Reset Password</button>
-      </Form>
-    </Formik>
+    <div className="reset-password-container">
+      <Formik
+        initialValues={{ newPassword: '' }}
+        validationSchema={signUpValidationSchema}
+        onSubmit={(values) => handleResetPassword(values)}
+      >
+        <Form>
+          <div>
+            <label htmlFor="newPassword">New Password</label>
+            <Field name="newPassword" type="password" />
+            <ErrorMessage name="newPassword" component="div" />
+          </div>
+          <button type="submit">Reset Password</button>
+        </Form>
+      </Formik>
+    </div>
   );
 };
 

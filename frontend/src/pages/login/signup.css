@@ -1,0 +1,75 @@
+/* Ensure form has space below the fixed navbar */
+.signup-container {
+  padding-top: 100px; /* Adjust this padding based on the height of your navbar */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Optional: Style the form for better alignment */
+.form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Label Styling */
+.form label {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Input field styling */
+.form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Sign Up button styling */
+.form button {
+  background-color: #9b111e; /* Red button color */
+  color: #d2a679; /* Light brown text color */
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+/* Button hover effect */
+.form button:hover {
+  background-color: #7f2d0b; /* Darker red background */
+  color: #fff; /* White text on hover */
+}
+
+/* Error message styling */
+.form .error {
+  color: #ff0000; /* Red color for error messages */
+  font-size: 0.9rem;
+  margin-top: 5px;
+}
+
+/* Optional: Extra spacing between email, name, password input fields */
+.form .input-container {
+  margin-bottom: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form {
+    padding: 20px; /* Reduce padding on smaller screens */
+    max-width: 100%; /* Allow the form to take up full width */
+  }
+}

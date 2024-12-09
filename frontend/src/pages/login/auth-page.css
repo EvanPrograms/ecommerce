@@ -1,0 +1,33 @@
+/* AuthPage styling */
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  min-height: 100vh;
+  background-color: #fafafa;
+  margin-top: 20px
+}
+
+.auth-page h1 {
+  font-size: 2.5rem;
+  color: #9b111e;
+  margin-bottom: 20px;
+}
+
+.auth-page button {
+  background-color: #9b111e;
+  color: #d2a679;
+  font-size: 1.2rem;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.auth-page button:hover {
+  background-color: #7f2d0b; /* Darker red */
+}

@@ -5,11 +5,12 @@ import axios from 'axios'
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import { useNavigate } from "react-router-dom";
+import './auth-page.css'
 
 const AuthPage = () => {
   const navigate = useNavigate()
   return (
-    <div>
+    <div className="auth-page">
       <h1>Sign In</h1>
       <SignIn />
       <h1>Create New User</h1>
