@@ -1,8 +1,7 @@
-/* Product Card Layout */
 .product {
   border-radius: 15px;
   width: 300px;
-  height: auto; /* Adjust height to fit content */
+  height: auto;
   margin: 30px;
   display: flex;
   flex-direction: column;
@@ -12,92 +11,83 @@
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  min-height: 450px; /* Ensure the card has enough space */
+  min-height: 450px;
 }
 
-/* Product Image Styling */
 .product-img {
-  height: 200px; /* Set a fixed height for all images */
-  width: 100%; /* Make sure the image takes up the full width of the container */
-  object-fit: cover; /* Ensure the image covers the area without stretching */
-  border-radius: 10px; /* Rounded corners for the image */
-  margin-bottom: 15px; /* Space between image and description */
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 15px;
   margin-top: 15px;
-  display: block; /* Ensure the image behaves as a block element */
+  display: block;
 }
 
-/* Product Description Styling */
 .product .description {
   text-align: center;
   font-family: 'Arial', sans-serif;
-  color: #d2a679; /* Light brown text color */
-  font-style: italic; /* Italic text */
-  word-wrap: break-word; /* Ensure long text wraps correctly */
-  flex-grow: 1; /* Allows the description to take remaining space */
-  margin-bottom: 10px; /* Reduced space between description and button */
+  color: #d2a679;
+  font-style: italic;
+  word-wrap: break-word;
+  flex-grow: 1;
+  margin-bottom: 10px;
 }
 
-/* Product Title Styling */
 .product .description p {
-  font-size: 1.1rem; /* Adjust font size */
-  margin: 5px 0; /* Reduced margin to bring text closer */
-  max-width: 100%; /* Ensure it fits the container */
+  font-size: 1.1rem;
+  margin: 5px 0;
+  max-width: 100%;
 }
 
-/* Price Styling */
 .product .description p.price {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #9b111e; /* Dark red for price */
-  margin-top: 5px; /* Reduced space between price and other elements */
+  color: #9b111e;
+  margin-top: 5px;
 }
 
-/* Total Ordered Styling */
 .product .description p.total-ordered {
   font-size: 1rem;
-  margin-bottom: 5px; /* Reduced space between total ordered and other elements */
+  margin-bottom: 5px;
   color: #555;
 }
 
-/* Hover effect for product card */
 .product:hover {
-  transform: scale(1.05); /* Slight zoom on hover */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
 
-/* Add to Cart Button Styling */
 .addToCartBttn {
-  background-color: #d2a679; /* Light brown background */
+  background-color: #d2a679;
   border: 2px solid transparent;
   min-width: 100px;
   padding: 12px 20px;
   border-radius: 15px;
-  color: #9b111e; /* Dark red text */
+  color: #9b111e;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
   text-transform: none;
-  visibility: visible; /* Ensure the text is visible */
-  margin-top: auto; /* Push the button to the bottom */
-  margin-bottom: 10px; /* Ensure there is space between the button and the bottom of the card */
-  display: inline-block; /* Ensure button is displayed properly */
-  text-shadow: 0px 0px 1px black, 0px 0px 0px black; /* Text shadow for contrast */
+  visibility: visible;
+  margin-top: auto;
+  margin-bottom: 10px;
+  display: inline-block;
+  text-shadow: 0px 0px 1px black, 0px 0px 0px black;
 }
 
-/* Hover effect for Add to Cart button */
 .addToCartBttn:hover {
-  background-color: #a88c60; /* Darker shade of light brown on hover */
-  color: #fff; /* White text on hover for contrast */
-  transform: scale(1.05); /* Slight zoom effect on hover */
-  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+  background-color: #a88c60;
+  color: #fff;
+  transform: scale(1.05);
+  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
 }
 
-/* Price Styling */
 .product .description p.price {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #9b111e; /* Dark red for price */
+  color: #9b111e;
   margin-top: 10px;
 }

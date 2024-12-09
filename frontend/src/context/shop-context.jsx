@@ -1,6 +1,5 @@
 import { createContext, useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation } from "@tanstack/react-query"
-import axios from "axios"
 import { AuthContext } from './auth-context'
 import { useApolloClient } from '@apollo/client'
 import { 
@@ -9,17 +8,16 @@ import {
   GET_PRODUCTS,
   CREATE_REVIEW
 } from '../../graphql/mutations'
-import { v4 as uuidv4 } from 'uuid';
 
-export const ShopContext = createContext(null)
+export const ShopContext = createContext(null);
 
 export const getDefaultCart = (productsLength) => {
-  let cart = {}
+  let cart = {};
   for (let i = 1; i < productsLength + 1; i++) {
-    cart[i] = 0
+    cart[i] = 0;
   }
-  return cart
-}
+  return cart;
+};
 
 const useCartUpdate = (mutation) => {
   const { user } = useContext(AuthContext);
@@ -34,7 +32,7 @@ const useCartUpdate = (mutation) => {
       mutation.mutate({ userId: user.id, cart });
     } else {
       console.log("Updating guest cart in localStorage:", newCart);
-      localStorage.setItem('cartItems', JSON.stringify(newCart))
+      localStorage.setItem('cartItems', JSON.stringify(newCart));
     }
   };
 
@@ -42,10 +40,10 @@ const useCartUpdate = (mutation) => {
 };
 
 export const ShopContextProvider = (props) => {
-  const { user } = useContext(AuthContext)
-  const client = useApolloClient()
+  const { user } = useContext(AuthContext);
+  const client = useApolloClient();
 
-  const [userReviews, setUserReviews] = useState([])
+  const [userReviews, setUserReviews] = useState([]);
 
   const { data: products, error, isLoading, refetch } = useQuery({
     queryKey: ['products'],
@@ -57,13 +55,7 @@ export const ShopContextProvider = (props) => {
       .then(response => response.data.getProducts)
   })
 
-  const [cartItems, setCartItems] = useState(getDefaultCart(products?.length))
-
-  useEffect(() => {
-    if (products) {
-      setCartItems(getDefaultCart(products.length));
-    }
-  }, [products]);
+  const [cartItems, setCartItems] = useState(getDefaultCart(products?.length));
 
   const { data: userCartData } = useQuery({
     queryKey: ['carts', user?.id],
@@ -81,11 +73,17 @@ export const ShopContextProvider = (props) => {
   });
 
   useEffect(() => {
+    if (products) {
+      setCartItems(getDefaultCart(products.length));
+    }
+  }, [products]);
+
+  useEffect(() => {
     if (user) {
-      refetchCart(); // Refetch cart for the logged-in user
+      refetchCart();
     } else {
       const savedCart = JSON.parse(localStorage.getItem('cartItems')) || {};
-      setCartItems(savedCart); // For guest, use cart from localStorage
+      setCartItems(savedCart); 
     }
   }, [user, products]);
 
@@ -111,7 +109,7 @@ export const ShopContextProvider = (props) => {
       variables: { userId, cart }
     }),
     onSuccess: () => {
-      console.log("Cart updated successfully")
+      console.log("Cart updated successfully");
     },
     onError: (error) => {
       console.error('Error updating cart:', error)
@@ -119,7 +117,7 @@ export const ShopContextProvider = (props) => {
         error.graphQLErrors.forEach(err => console.log(err.message));
       }
     }
-  })
+  });
 
   const updateCart = useCartUpdate(mutation);
 
@@ -135,7 +133,7 @@ export const ShopContextProvider = (props) => {
 
   const handleCartChange = (itemId, change) => {
     setCartItems(prev => {
-      const newQuantity = (prev[itemId] || 0) + change; // Ensure no NaN
+      const newQuantity = (prev[itemId] || 0) + change; 
       const newCart = { ...prev, [itemId]: Math.max(newQuantity, 0) };
       updateCart(newCart);
       return newCart;
@@ -148,7 +146,7 @@ export const ShopContextProvider = (props) => {
         const { data } = await client.query({
           query: GET_USER_CART,
           variables: { userId: user.id },
-          fetchPolicy: "network-only", // Ensures fresh data is fetched
+          fetchPolicy: "network-only",
         });
   
         const newCart = data.getUserCart.reduce((acc, item) => {
@@ -156,16 +154,13 @@ export const ShopContextProvider = (props) => {
           return acc;
         }, {});
   
-        // Reset to getDefaultCart if the cart is empty
         setCartItems(newCart);
       } catch (error) {
         console.error("Error refetching cart:", error);
-        // On error, reset to getDefaultCart
         setCartItems(getDefaultCart(products?.length || 0));
       }
     } else {
-      // Reset to getDefaultCart for non-authenticated users
-      const savedCart = JSON.parse(localStorage.getItem('cartItems')) || {}
+      const savedCart = JSON.parse(localStorage.getItem('cartItems')) || {};
       setCartItems(savedCart);
     }
   };
@@ -186,13 +181,13 @@ export const ShopContextProvider = (props) => {
       });
     },
     onSuccess: (newReview) => {
-      setUserReviews((prevReviews) => [...prevReviews, newReview.data.createReview])
-      refetchProducts()
+      setUserReviews((prevReviews) => [...prevReviews, newReview.data.createReview]);
+      refetchProducts();
     },
     onError: (error) => {
       console.error('Error submitting review: ', error)
     }
-  })
+  });
 
   const submitReview = async (reviewData) => {
     if (!user?.id) {
@@ -201,11 +196,11 @@ export const ShopContextProvider = (props) => {
     }
   
     try {
-      const response = await reviewMutation.mutateAsync(reviewData); // Await the mutation
-      return response; // Return the result to the caller
+      const response = await reviewMutation.mutateAsync(reviewData); 
+      return response; 
     } catch (error) {
       console.error('Error submitting review:', error);
-      throw error; // Re-throw for caller to handle
+      throw error; 
     }
   };
 
@@ -222,15 +217,12 @@ export const ShopContextProvider = (props) => {
     userReviews,
     submitReview,
     products
-   }
-
-  // console.log(cartItems)
-  // console.log('Current Cart Items:', cartItems);
+   };
 
   return (
     <ShopContext.Provider value={contextValue}>
       {isLoading ? <div>Loading...</div> : error ? <div>Error: {error.message}</div> : props.children}
     </ShopContext.Provider>
-  )
-}
+  );
+};
  

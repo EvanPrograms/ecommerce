@@ -1,4 +1,3 @@
-/* AuthPage styling */
 .auth-page {
   display: flex;
   flex-direction: column;
@@ -29,5 +28,5 @@
 }
 
 .auth-page button:hover {
-  background-color: #7f2d0b; /* Darker red */
+  background-color: #7f2d0b; 
 }

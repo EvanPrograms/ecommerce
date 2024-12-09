@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from "react-router-dom";
@@ -29,10 +29,10 @@ const SignUp = () => {
       if (loginData && loginData.login) {
         console.log("Mutation response:", loginData);
         const token = loginData.login.token;
-        const user = loginData.login.user; // Assuming user data is available
-        authLogin(user, token); // Pass user data and token to context
-        localStorage.setItem('user-token', token); // Store token
-        navigate('/shop'); // Redirect after login
+        const user = loginData.login.user; 
+        authLogin(user, token); 
+        localStorage.setItem('user-token', token); 
+        navigate('/shop'); 
       }
       navigate('/shop');
     } catch (err) {

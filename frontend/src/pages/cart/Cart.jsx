@@ -1,18 +1,17 @@
 import React, { useContext } from "react"
-import { ShopContext } from "../../context/shop-context"
-import Product from '../shop/Product'
-import CartItem from "./CartItem"
-import "./cart.css"
 import { useNavigate } from 'react-router-dom'
-import { useMutation } from '@apollo/client';import axios from "axios"
+import { useMutation } from '@apollo/client'
+import { ShopContext } from "../../context/shop-context"
+import CartItem from "./CartItem"
 import { CREATE_CHECKOUT_SESSION } from '../../../graphql/mutations'
+import "./cart.css"
 
 const Cart = () => {
-  const navigate = useNavigate()
-  const { cartItems, getTotalCartAmount, products } = useContext(ShopContext)
-  const totalAmount = getTotalCartAmount()
+  const navigate = useNavigate();
+  const { cartItems, getTotalCartAmount, products } = useContext(ShopContext);
+  const totalAmount = getTotalCartAmount();
 
-  const [createCheckoutSession] = useMutation(CREATE_CHECKOUT_SESSION)
+  const [createCheckoutSession] = useMutation(CREATE_CHECKOUT_SESSION);
 
   const handleCheckout = async () => {
     const cartDetails = products
@@ -22,19 +21,20 @@ const Cart = () => {
         name: product.name,
         price: product.price,
         quantity: cartItems[product.id]
-      }))
+      }));
 
       try {
         const { data } = await createCheckoutSession({
           variables: { cartItems: cartDetails }
-        })
+        });
+
         if (data?.createCheckoutSession?.url) {
-          window.location.href = data.createCheckoutSession.url
+          window.location.href = data.createCheckoutSession.url;
         }
       } catch (error) {
-        console.error('Checkout session creation failed: ', error)
+        console.error('Checkout session creation failed: ', error);
       }
-  }
+  };
 
   return (
     <div className="cart">
@@ -43,12 +43,9 @@ const Cart = () => {
       </div>
       <div className="cartItems">
         {products?.length > 0 ? (
-          products.map((product) => {
+          products.map(product => {
             const productQuantity = cartItems[product.id] || 0;
-            if (productQuantity > 0) {
-              return <CartItem key={product.id} data={product} />;
-            }
-            return null;
+            return productQuantity > 0 && <CartItem key={product.id} data={product} />;
           })
         ) : (
           <div>Loading products...</div>
@@ -62,10 +59,10 @@ const Cart = () => {
           <button onClick={handleCheckout}>Checkout</button>
         </div>
       ) : (
-        <h1 className='empty-cart'>Your Shopping Cart is Empty</h1>
+        <h1 className="empty-cart">Your Shopping Cart is Empty</h1>
       )}
     </div>
   )
 }
 
-export default Cart
+export default Cart;

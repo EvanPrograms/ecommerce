@@ -1,4 +1,3 @@
-/* Product Details Page Layout */
 .product-details {
   display: flex;
   justify-content: center;
@@ -25,7 +24,6 @@
   justify-content: flex-start;
 }
 
-/* Product Name Styling */
 .product-details-info h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
@@ -34,10 +32,9 @@
   text-shadow: 0px 0px 2px black;
 }
 
-/* Add to Cart Button Styling */
 .add-to-cart-button {
-  background-color: #9b111e; /* Primary color for buttons */
-  color: #d2a679; /* Light brown text */
+  background-color: #9b111e; 
+  color: #d2a679; 
   font-size: 1.1rem;
   padding: 12px 20px;
   border: none;
@@ -45,19 +42,17 @@
   width: 100%;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 20px; /* Add space between product details and button */
+  margin-top: 20px; 
 }
 
-/* Add to Cart Button Hover Effect */
 .add-to-cart-button:hover {
   background-color: #7f2d0b;
   color: white;
 }
 
-/* Leave Review Button Styling (when the form is closed) */
 .leave-review-button {
-  background-color: #9b111e; /* Primary color for buttons */
-  color: #d2a679; /* Light brown text */
+  background-color: #9b111e; 
+  color: #d2a679; 
   font-size: 1.1rem;
   padding: 12px 20px;
   border: none;
@@ -65,60 +60,54 @@
   width: auto;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  margin-top: 20px; /* Add space between product details and button */
-  margin-left: 20px; /* Add left margin for spacing */
-  margin-right: 20px; /* Add right margin for spacing */
-  display: inline-block; /* Ensure the button is inline and not stretched */
-  text-align: center; /* Center text inside button */
+  margin-top: 20px; 
+  margin-left: 20px; 
+  margin-right: 20px; 
+  display: inline-block; 
+  text-align: center; 
 }
 
-/* Leave Review Button Hover Effect */
 .leave-review-button:hover {
   background-color: #7f2d0b;
   color: white;
 }
 
-/* Review Form Styling */
 form {
   margin-left: 40px;
-  margin-right: 40px; /* Add padding to the right */
-  padding-bottom: 20px; /* Add space at the bottom */
+  margin-right: 40px; 
+  padding-bottom: 20px; 
 }
 
-/* Larger text area for review */
 form textarea {
   width: 100%;
-  height: 150px; /* Adjust height for better readability */
+  height: 150px; 
   padding: 10px;
   font-size: 1rem;
   border-radius: 10px;
   border: 1px solid #ccc;
-  resize: vertical; /* Allow user to resize vertically */
+  resize: vertical; 
 }
 
-/* Submit and Cancel Button Styling in Review Form */
 form button {
   background-color: #9b111e;
   color: #d2a679;
   font-size: 1rem;
-  padding: 8px 16px; /* Adjusted button size for a more normal size */
+  padding: 8px 16px; 
   border: none;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 10px;
   width: auto;
   transition: background-color 0.3s ease;
-  margin-left: 10px; /* Space between submit and cancel buttons */
+  margin-left: 10px; 
   margin-right: 10px;
 }
 
-/* Hover Effect for Buttons */
 form button:hover {
   background-color: #7f2d0b;
   color: white;
 }
 
-/* Review Title Styling */
 .reviews h3 {
   font-size: 1.8rem;
   color: #9b111e;
@@ -128,7 +117,6 @@ form button:hover {
   margin-left: 10px;
 }
 
-/* Individual Review Box Styling */
 .review {
   background-color: #f8f8f8;
   padding: 20px;
@@ -142,7 +130,6 @@ form button:hover {
   margin-right: auto;
 }
 
-/* Review Text Styling */
 .review p {
   font-size: 1.1rem;
   margin: 5px 0;
@@ -157,10 +144,8 @@ form button:hover {
   margin-top: 5px;
 }
 
-/* Ensure space between "Please log in" and the reviews section */
 .no-review-message {
-  margin-top: 20px; /* Add top margin to create space between the message and reviews section */
-  padding: 0 20px;
+  margin-top: 20px; 
   font-size: 1rem;
   color: #555;
 }

@@ -9,20 +9,19 @@ const CartItem = (props) => {
     clearTheCart, 
     cartItems, 
     updateCartItemCount
-   } = useContext(ShopContext)
-   const navigate = useNavigate()
+   } = useContext(ShopContext);
+   const navigate = useNavigate();
 
-  const { id, name, image, description, price} = props.data
+  const { id, name, image, price} = props.data;
   const [inputValue, setInputValue] = useState(cartItems[id] || 0);
 
   const handleChange = (event) => {
     const value = event.target.value;
 
-    // Check if the input is a valid number or empty
     if (value === '' || /^\d+$/.test(value) && value.length <= 3) {
-      setInputValue(value); // Update local state
+      setInputValue(value);
       if (value !== '') {
-        updateCartItemCount(Number(value), id); // Update context state only with a valid number
+        updateCartItemCount(Number(value), id);
       }
     }
   };
@@ -62,7 +61,7 @@ const CartItem = (props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CartItem
+export default CartItem;

@@ -1,80 +1,84 @@
-/* Ensure navbar spans full width of the viewport */
+:root {
+  --primary-color: #e20000;
+  --secondary-color: #9b111e;
+  --highlight-color: #d2a679;
+  --button-hover-color: #d9534f;
+  --font-family: 'Arial', sans-serif;
+  --font-size-default: 18px;
+  --font-size-small: 14px;
+  --font-weight-normal: 500;
+  --font-style-italic: italic;
+  --text-shadow: 0px 0px 1px black, 0px 0px 0px black;
+}
+
 .navbar {
-  position: fixed; /* Keeps navbar fixed at the top */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; /* Forces navbar to take up the full width of the viewport */
-  height: 80px;
-  background: linear-gradient(45deg, #e20000, #9b111e); /* Gradient background */
+  width: 100%;
+  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px; /* Adds space on the sides */
+  padding: 0 20px;
   box-sizing: border-box;
-  z-index: 1000; /* Ensures navbar stays on top of other content */
+  z-index: 1000;
 }
 
-/* Links inside navbar */
-.links {
+.navbar-links {
   display: flex;
   align-items: center;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--font-family);
   flex-grow: 1;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
-/* Navbar button links (Shop, Cart, etc.) */
-.links .MuiButton-root {
+.navbar-links .MuiButton-root {
   text-decoration: none;
-  color: #d2a679; /* Light brown color */
+  color: var(--highlight-color);
   margin-left: 20px;
-  font-size: 18px;
-  font-style: italic; /* Make the text italic */
-  font-weight: 500;
-  text-shadow: 0px 0px 1px black, 0px 0px 0px black; /* Add text shadow */
-  transition: color 0.3s ease; /* Smooth transition for hover effect */
+  font-size: var(--font-size-default);
+  font-style: var(--font-style-italic);
+  font-weight: var(--font-weight-normal);
+  text-shadow: var(--text-shadow);
   border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Button hover effect */
-.links .MuiButton-root:hover {
-  background-color: #d9534f; /* Light red background on hover */
-  color: white; /* Ensure text stays white on hover */
+.navbar-links .MuiButton-root:hover {
+  background-color: var(--button-hover-color);
+  color: white;
 }
 
-/* Style for logged-in user's name and log out button */
-.loggedin em {
+.navbar-loggedin em {
   margin-right: 10px;
-  font-style: italic; /* Make the logged-in name italic */
-  color: #d2a679; /* Light brown color */
-  text-shadow: 0px 0px 1px black, 0px 0px 0px black; /* Add text shadow */
+  font-style: var(--font-style-italic);
+  color: var(--highlight-color);
+  text-shadow: var(--text-shadow);
 }
 
-/* Style for 'Log out' button to match the text color */
-.loggedin .MuiButton-root {
-  color: #d2a679 !important; /* Light brown color for 'Log out' button */
-  font-style: italic;
-  text-shadow: 0px 0px 1px black, 0px 0px 0px black; /* Add text shadow */
+.navbar-loggedin .MuiButton-root {
+  color: var(--highlight-color) !important;
+  font-style: var(--font-style-italic);
+  text-shadow: var(--text-shadow);
 }
 
-/* Order History section */
-.orderhistory {
+.navbar-order-history {
   margin-left: 20px;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .navbar {
-    padding: 0 10px; /* Adjust padding for smaller screens */
+    padding: 0 10px;
   }
 
-  .links {
-    justify-content: space-between; /* Spread the links evenly */
+  .navbar-links {
+    justify-content: space-between;
     width: 100%;
   }
 
-  .links .MuiButton-root {
-    font-size: 14px; /* Smaller font size on mobile */
-    margin-left: 10px; /* Reduce margin between links */
+  .navbar-links .MuiButton-root {
+    font-size: var(--font-size-small);
+    margin-left: 10px;
   }
 }

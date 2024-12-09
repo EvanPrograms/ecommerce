@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { VALIDATE_SUCCESS } from "../../../graphql/mutations";
 import { useParams, useNavigate } from "react-router-dom";
 import { ShopContext, getDefaultCart } from '../../context/shop-context';
-import './success.css'; // Import your CSS here
+import './success.css'; 
 
 const Success = () => {
   const { randomValue } = useParams();
@@ -13,12 +13,12 @@ const Success = () => {
   const hasValidated = useRef(false);
 
   useEffect(() => {
-    refetchProducts();  // Refetch products to ensure we have the latest data
+    refetchProducts();  
   }, [refetchProducts]);
 
   useEffect(() => {
     const handleValidation = async () => {
-      if (hasValidated.current) return;  // Prevent multiple calls
+      if (hasValidated.current) return; 
       hasValidated.current = true;
 
       try {

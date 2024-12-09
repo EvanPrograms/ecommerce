@@ -1,4 +1,3 @@
-/* home.css */
 .container {
   position: relative;
   z-index: 1;
@@ -44,9 +43,9 @@
   font-family: 'Playfair Display', serif;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   background: linear-gradient(45deg, #e20000, #9b111e);
-  -webkit-background-clip: text; /* Vendor-prefixed property */
-  background-clip: text; /* Standard property */
-  -webkit-text-fill-color: transparent; /* Ensure proper text transparency in WebKit browsers */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .container .subheading {
@@ -62,12 +61,8 @@
 
 .container .button {
   background-color: #92350f;
-  &:hover {
-    background-color: #7f2d0b;
-    border: 2px solid #9b111e;
-  }
-  font-style: italic;
   color: #9b111e;
+  font-style: italic;
   font-family: 'Playfair Display', serif;
   border: 2px solid transparent;
   padding: 12px 32px;
@@ -75,4 +70,9 @@
   border-radius: 30px;
   text-transform: none;
   text-shadow: 0px 0px 1px black, 0px 0px 0px black;
+}
+
+.container .button:hover {
+  background-color: #7f2d0b;
+  border: 2px solid #9b111e;
 }

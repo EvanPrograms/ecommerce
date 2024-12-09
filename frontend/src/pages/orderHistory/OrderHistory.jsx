@@ -12,8 +12,6 @@ const OrderHistory = () => {
     return <div>Loading Order History...</div>
   }
 
-  console.log('Order history data: ', data)
-
   const orders = data?.getOrderHistory || []
 
   return(
@@ -21,4 +19,4 @@ const OrderHistory = () => {
   )
 }
 
-export default OrderHistory
+export default OrderHistory;

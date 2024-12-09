@@ -1,10 +1,10 @@
-import getStripe from '../../../lib/getStripe'
+import getStripe from '../../../lib/getStripe';
 
 const DOMAIN = process.env.REACT_APP_DOMAIN || 'http://localhost:5173';
 
 export default function Home () {
   async function handleCheckout() {
-    const stripe = await getStripe()
+    const stripe = await getStripe();
 
     const { error } = await stripe.redirectToCheckout({
       lineItems: [
@@ -16,8 +16,12 @@ export default function Home () {
       mode: 'payment',
       success_url: `${DOMAIN}/success.html`,
       cancel_url: `${DOMAIN}/cancel.html`
-    })
-    console.warn(error.message)
-  }
-  return <button onClick={handleCheckout}>Checkout</button>
+    });
+
+    if (error) {
+      console.warn(error.message);
+    }
+  };
+
+  return <button onClick={handleCheckout}>Checkout</button>;
 }

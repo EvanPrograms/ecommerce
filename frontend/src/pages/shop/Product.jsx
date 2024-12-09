@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { ShopContext } from '../../context/shop-context'
 import { useNavigate } from "react-router-dom";
 import './Product.css';
@@ -21,17 +21,15 @@ const Product = (props) => {
   const handleNavigateDetails = () => {
     navigate(`/product/${id}`)
   }
-  // console.log(cartItemAmount)
 
   const formatRating = (rating) => {
-    const fullStars = Math.floor(rating); // Full stars (integer part)
-    const halfStars = (rating % 1) >= 0.5 ? 1 : 0; // Half star if the decimal is >= 0.5
-    const emptyStars = 5 - fullStars - halfStars; // Empty stars
-    
-    // Create an array with full, half, and empty stars
+    const fullStars = Math.floor(rating); 
+    const halfStars = (rating % 1) >= 0.5 ? 1 : 0; 
+    const emptyStars = 5 - fullStars - halfStars; 
+  
     const stars = [
       ...Array(fullStars).fill('⭐'),
-      ...Array(halfStars).fill('✨'), // Use a different character for half star
+      ...Array(halfStars).fill('✨'), 
       ...Array(emptyStars).fill('☆')
     ];
     
@@ -70,7 +68,7 @@ const Product = (props) => {
           Add to Cart {cartItemAmount !== undefined && cartItemAmount !== 0 && <>({cartItemAmount})</>}
         </button>
     </div>
-  )
-}
+  );
+};
 
-export default Product
+export default Product;

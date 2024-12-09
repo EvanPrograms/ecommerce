@@ -1,22 +1,20 @@
-/* Ensure the cart container is centered */
 .cart {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  padding: 20px;  /* Add padding to avoid content touching the edges */
-  box-sizing: border-box; /* Ensures padding is included within the width */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-/* Style for cart items */
 .cartItems {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* Full width of the container */
-  max-width: 1200px; /* Prevent stretching on wide screens */
-  margin: 0 auto; /* Center items horizontally */
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .cartItem {
@@ -24,30 +22,27 @@
   height: 250px;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Ensures content is spaced properly inside the cart item */
+  justify-content: space-between;
   box-shadow: 0px 3px 15px rgba(0, 0, 0, 0.2);
   border-radius: 25px;
-  margin: 15px 0; /* Reduced margin for spacing between cart items */
+  margin: 15px 0;
   padding: 20px;
-  background-color: #f4f4f4; /* Optional: Add a background color for a more distinct look */
+  background-color: #f4f4f4;
 }
 
-/* Cart item image styling */
 .cartItem img {
   width: 200px;
   height: auto;
-  border-radius: 10px; /* Optional: Add rounded corners to the image */
+  border-radius: 10px;
 }
 
-/* Cart item description */
 .cartItem .description {
   width: 100%;
   font-size: 1.2rem;
   color: #333;
-  padding-left: 20px; /* Adds space between image and description */
+  padding-left: 20px;
 }
 
-/* Cart item count handler */
 .countHandler input {
   width: 60px;
   text-align: center;
@@ -61,7 +56,6 @@
   text-align: center;
 }
 
-/* Checkout button styling */
 .checkout button {
   width: 200px;
   height: 50px;
@@ -74,12 +68,10 @@
   transition: background-color 0.3s ease;
 }
 
-/* Button hover effect */
 .checkout button:hover {
-  background-color: #d9534f; /* Change to a red color on hover */
+  background-color: #d9534f;
 }
 
-/* Empty cart message styling */
 .empty-cart {
   font-size: 1.5rem;
   color: #555;

@@ -1,16 +1,11 @@
 import React from 'react';
-import { Container, Grid, Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
-// import products from '../../products'
 import Product from './Product';
-import './shop.css'
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios'
 import { useContext } from 'react';
 import { ShopContext } from '../../context/shop-context';
+import './shop.css'
 
 const Products = () => {
-  const { products, isLoading, error } = useContext(ShopContext); // Access products from context
+  const { products, isLoading, error } = useContext(ShopContext); 
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;

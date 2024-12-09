@@ -1,4 +1,3 @@
-/* SignIn form styling */
 .form {
   background-color: #fff;
   padding: 30px;
@@ -24,10 +23,9 @@
   font-size: 1rem;
 }
 
-/* Sign In button styling */
 .form button {
   background-color: #9b111e;
-  color: #d2a679 !important; /* Set text color to light brown */
+  color: #d2a679 !important; 
   font-size: 1.1rem;
   padding: 12px 20px;
   border: none;
@@ -37,16 +35,14 @@
   transition: background-color 0.3s ease;
 }
 
-/* Button hover effect */
 .form button:hover {
   background-color: #7f2d0b;
-  color: #fff; /* Text color changes to white on hover */
+  color: #fff; 
 }
 
-/* Forgot Password link styling */
 .form .forgot-password {
   background-color: #9b111e;
-  color: #d2a679 !important; /* Set text color to light brown */
+  color: #d2a679 !important; 
   font-size: 1.1rem;
   padding: 12px 20px;
   border: none;
@@ -57,11 +53,10 @@
 }
 
 .form .forgot-password:hover {
-  color: #fff; /* Text color changes to white on hover */
+  color: #fff; 
   font-size: 1.1rem;
 }
 
-/* Error message styling */
 .form .error {
   color: #ff0000;
   font-size: 0.9rem;

@@ -32,9 +32,8 @@ const apolloClient = new ApolloClient({
       Query: {
         fields: {
           getUserCart: {
-            keyArgs: ["userId"], // Ensure cache keys are based on `userId`
+            keyArgs: ["userId"], 
             merge(existing = [], incoming) {
-              // Handle merging of existing and incoming data
               return [...incoming];
             },
           },
@@ -47,7 +46,7 @@ const apolloClient = new ApolloClient({
         },
       },
       CartItem: {
-        keyFields: ["id"], // Normalize `CartItem` by its `id`
+        keyFields: ["id"], 
       },
     },
   }),
@@ -59,7 +58,6 @@ root.render(
     <ApolloProvider client={apolloClient}>
       <React.StrictMode>
         <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <App />
         </ThemeProvider>

@@ -5,7 +5,7 @@ import { LOGIN_USER } from "../../../graphql/mutations";
 import { AuthContext } from "../../context/auth-context";
 import { useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
-import "./sign-in.css"; // Link the CSS file here
+import "./sign-in.css"; 
 
 const SignIn = () => {
   const { login: authLogin } = useContext(AuthContext);
@@ -20,7 +20,7 @@ const SignIn = () => {
         const token = data.login.token;
         const user = data.login.user;
         localStorage.setItem("user-token", token);
-        authLogin(user, token); // Pass both user data and token
+        authLogin(user, token); 
         navigate("/shop");
       }
     } catch (error) {

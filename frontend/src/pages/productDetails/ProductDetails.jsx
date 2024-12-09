@@ -10,16 +10,16 @@ const ProductDetails = () => {
   const { id } = useParams();
   const { state } = useLocation()
   const { products, addToCart, cartItems, userReviews, submitReview, refetchProducts } = useContext(ShopContext)
+  const { user } = useContext(AuthContext)
+  
   const cartItemAmount = cartItems[id]
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(state?.openReviewForm || false)
   const [stars, setStars] = useState(5)
   const [reviewText, setReviewText] = useState('')
 
-  const { user } = useContext(AuthContext)
-
   const { data: reviewsData, loading: reviewsLoading, refetch } = useQuery(GET_REVIEWS, {
-    variables: { productId: id }, // Pass productId to the query
-    fetchPolicy: 'network-only', // Ensure fresh data
+    variables: { productId: id }, 
+    fetchPolicy: 'network-only', 
   });
 
   const [localReviews, setLocalReviews] = useState(reviewsData?.getReviews || []);
@@ -41,9 +41,6 @@ const ProductDetails = () => {
     return <h2>Product not found</h2>;
   }
 
-  
-
-
   const handleSubmitReview = async (event) => {
     event.preventDefault();
     const reviewData = {
@@ -56,13 +53,12 @@ const ProductDetails = () => {
       const { data } = await submitReview(reviewData);
       setIsReviewFormOpen(false);
       setLocalReviews((prevReviews) => [...prevReviews, data.createReview]);
-      await refetch(); // Refresh reviews
+      await refetch();
     } catch (error) {
       console.error("Error submitting review: ", error);
     }
   };
   
-
   const renderStarsDropdown = () => (
     <select
       id="stars"
@@ -81,14 +77,13 @@ const ProductDetails = () => {
   );
 
   const formatRating = (rating) => {
-    const fullStars = Math.floor(rating); // Full stars (integer part)
-    const halfStars = (rating % 1) >= 0.5 ? 1 : 0; // Half star if the decimal is >= 0.5
-    const emptyStars = 5 - fullStars - halfStars; // Empty stars
-    
-    // Create an array with full, half, and empty stars
+    const fullStars = Math.floor(rating);
+    const halfStars = (rating % 1) >= 0.5 ? 1 : 0; 
+    const emptyStars = 5 - fullStars - halfStars; 
+ 
     const stars = [
       ...Array(fullStars).fill('⭐'),
-      ...Array(halfStars).fill('✨'), // Use a different character for half star
+      ...Array(halfStars).fill('✨'), 
       ...Array(emptyStars).fill('☆')
     ];
     
