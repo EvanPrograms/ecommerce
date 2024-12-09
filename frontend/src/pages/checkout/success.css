@@ -1,0 +1,26 @@
+/* Ensure the success page has space below the fixed navbar */
+.success-container {
+  padding-top: 100px; /* Adjust this padding based on the height of your navbar */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Optional: Style the message for better alignment */
+.success-message {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.success-message p {
+  font-size: 1.2rem;
+  color: #555;
+  font-weight: 500;
+}

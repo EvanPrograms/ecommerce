@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import { VALIDATE_SUCCESS } from "../../../graphql/mutations";
 import { useParams, useNavigate } from "react-router-dom";
 import { ShopContext, getDefaultCart } from '../../context/shop-context';
+import './success.css'; // Import your CSS here
 
 const Success = () => {
   const { randomValue } = useParams();
@@ -23,8 +24,7 @@ const Success = () => {
       try {
         const response = await validateSuccess({ variables: { randomValue } });
         console.log("Validation successful and Cart cleared:", response.data.validateSuccess.success);
-        await refetchCart()
-
+        await refetchCart();
       } catch (error) {
         if (error.message.includes('Cannot read properties of undefined')) {
           console.error('Guest checkout with no user ID, treating as guest');
@@ -42,8 +42,10 @@ const Success = () => {
   }, [randomValue, validateSuccess, refetchCart, products?.length]);
 
   return (
-    <div>
-      <p>We appreciate your business! Thanks for your order</p>
+    <div className="success-container">
+      <div className="success-message">
+        <p>We appreciate your business! Thanks for your order</p>
+      </div>
     </div>
   );
 };
