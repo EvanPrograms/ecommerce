@@ -24,13 +24,18 @@ const Product = (props) => {
   // console.log(cartItemAmount)
 
   const formatRating = (rating) => {
-    if (rating === 5.0) {
-      return '5 / 5';
-    } else if (rating === 0.0) {
-      return '0 / 5';
-    } else {
-      return `${rating.toFixed(1)} / 5`;
-    }
+    const fullStars = Math.floor(rating); // Full stars (integer part)
+    const halfStars = (rating % 1) >= 0.5 ? 1 : 0; // Half star if the decimal is >= 0.5
+    const emptyStars = 5 - fullStars - halfStars; // Empty stars
+    
+    // Create an array with full, half, and empty stars
+    const stars = [
+      ...Array(fullStars).fill('⭐'),
+      ...Array(halfStars).fill('✨'), // Use a different character for half star
+      ...Array(emptyStars).fill('☆')
+    ];
+    
+    return stars.join('');
   };
 
   return (

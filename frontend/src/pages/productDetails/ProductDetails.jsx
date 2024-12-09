@@ -80,6 +80,22 @@ const ProductDetails = () => {
     </select>
   );
 
+  const formatRating = (rating) => {
+    const fullStars = Math.floor(rating); // Full stars (integer part)
+    const halfStars = (rating % 1) >= 0.5 ? 1 : 0; // Half star if the decimal is >= 0.5
+    const emptyStars = 5 - fullStars - halfStars; // Empty stars
+    
+    // Create an array with full, half, and empty stars
+    const stars = [
+      ...Array(fullStars).fill('⭐'),
+      ...Array(halfStars).fill('✨'), // Use a different character for half star
+      ...Array(emptyStars).fill('☆')
+    ];
+    
+    return stars.join('');
+  };
+  
+
   return(
     <div>
       <div className="product-details">
@@ -90,20 +106,26 @@ const ProductDetails = () => {
           <h1>{product.name}</h1>
           <p className="product-description">{product.description}</p>
           <p className="product-price">Price: ${(product.price / 100).toFixed(2)}</p>
+          <p className="product-rating">Rating: {formatRating(product.averageRating)}</p>
           <p className="product-total-ordered">{product.totalQuantityOrdered} bought by Happy People!</p>
           <button className="add-to-cart-button" onClick={() => addToCart(id)}>Add to Cart {cartItemAmount !== undefined && cartItemAmount !== 0 && <>({cartItemAmount})</>}</button>
         </div>
       </div>
       <div className="review-title">
         {user && existingReview ? (
-          <div>
+          <div className="your-review">
             <h3>Your Review:</h3>
-            <p>Rating: {existingReview.stars} / 5</p>
+            <p>Rating: {formatRating(existingReview.stars)}</p>
             <p>{existingReview.review}</p>
           </div>
         ) : (
           user && !isReviewFormOpen && (
-            <button onClick={() => setIsReviewFormOpen(true)}>Leave Review</button>
+            <button 
+              className="leave-review-button"
+              onClick={() => setIsReviewFormOpen(true)}
+            >
+              Leave Review
+            </button>
           )
         )}
         {user && isReviewFormOpen && (
@@ -137,7 +159,7 @@ const ProductDetails = () => {
         ) : (
           reviewsData?.getReviews.map((review) => (
             <div key={review.id} className="review">
-              <p><strong>{review.stars} / 5:</strong> {review.review}</p>
+              <p><strong>{formatRating(review.stars)}:</strong> {review.review}</p>
               <p><em>Posted on {new Date(review.createdAt).toLocaleDateString()}</em></p>
             </div>
           ))
