@@ -31,12 +31,14 @@
   font-family: var(--font-family);
   flex-grow: 1;
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .navbar-links .MuiButton-root {
   text-decoration: none;
   color: var(--highlight-color);
-  margin-left: 20px;
+  margin-left: 0;
   font-size: var(--font-size-default);
   font-style: var(--font-style-italic);
   font-weight: var(--font-weight-normal);
@@ -75,10 +77,11 @@
   .navbar-links {
     justify-content: space-between;
     width: 100%;
+    gap: 4px;
   }
 
   .navbar-links .MuiButton-root {
     font-size: var(--font-size-small);
-    margin-left: 10px;
+    padding: 6px 8px;
   }
 }

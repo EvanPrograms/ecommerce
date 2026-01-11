@@ -11,6 +11,9 @@ import OrderHistory from './pages/orderHistory/OrderHistory';
 import Navbar from './components/navbar'
 import ResetPassword from './pages/login/ResetPassword';
 import ResetPasswordSubmission from './pages/login/ResetPasswordSubmission';
+import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/material/Box';
+import Footer from './components/Footer';
 
 import { ShopContextProvider } from './context/shop-context';
 import { AuthContextProvider } from './context/auth-context'
@@ -21,20 +24,28 @@ const App = () => {
     <AuthContextProvider>
       <ShopContextProvider> 
         <Router>
-          {location.pathname !== '/' && <Navbar />}
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/login" element={<AuthPage />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="resetpassword" element={<ResetPassword />} />
-            <Route path="resetpasswordform" element={<ResetPasswordSubmission />} />
-            <Route path="/success/:randomValue" element={<Success />} />
-            <Route path="/cancel" element={<Cancel />} />
-            <Route path="/order-history" element={<OrderHistory />} />
-          </Routes>
+          <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            {location.pathname !== '/' && <Navbar />}
+            {location.pathname !== '/' && <Toolbar />}
+
+            <Box component="main" sx={{ flex: 1 }}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/login" element={<AuthPage />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="resetpassword" element={<ResetPassword />} />
+                <Route path="resetpasswordform" element={<ResetPasswordSubmission />} />
+                <Route path="/success/:randomValue" element={<Success />} />
+                <Route path="/cancel" element={<Cancel />} />
+                <Route path="/order-history" element={<OrderHistory />} />
+              </Routes>
+            </Box>
+
+            {location.pathname !== '/' && <Footer />}
+          </Box>
         </Router>
       </ShopContextProvider>
     </AuthContextProvider>
