@@ -39,13 +39,22 @@ const HOST = process.env.HOST || 'localhost';
 app.use('/api/webhook', bodyParser.raw({ type: 'application/json' }));
 
 app.use(express.json());
-const allowedOrigins = ['http://localhost:5173'];
+const defaultAllowedOrigins = [
+  'http://localhost:5173',
+  'https://passionchocolates.com',
+  'https://www.passionchocolates.com',
+];
+
+const allowedOrigins = (process.env.CORS_ORIGINS || defaultAllowedOrigins.join(','))
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
