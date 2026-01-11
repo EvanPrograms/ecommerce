@@ -16,8 +16,8 @@ const Footer = () => {
       }}
     >
       <Typography variant="body2" color="text.secondary" align="center">
-        Portfolio demo (legacy project). Built with React (Vite), MUI, Node/Express, Apollo GraphQL,
-        PostgreSQL, and Stripe.
+        Portfolio project. Built with React (Vite) + MUI, Node/Express, Apollo GraphQL, PostgreSQL,
+        and Stripe.
       </Typography>
       <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 1 }}>
         <Link href="https://evanprograms.com" target="_blank" rel="noreferrer">
