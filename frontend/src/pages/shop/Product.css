@@ -1,8 +1,9 @@
 .product {
   border-radius: 15px;
-  width: 300px;
+  width: 100%;
+  max-width: 340px;
   height: auto;
-  margin: 30px;
+  margin: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -90,4 +91,17 @@
   font-weight: bold;
   color: #9b111e;
   margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .product {
+    max-width: 100%;
+    padding: 14px;
+    min-height: unset;
+  }
+
+  /* Hover scaling causes horizontal jitter on touch devices */
+  .product:hover {
+    transform: none;
+  }
 }

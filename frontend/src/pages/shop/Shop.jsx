@@ -2,7 +2,7 @@ import React from 'react';
 import Product from './Product';
 import { useContext } from 'react';
 import { ShopContext } from '../../context/shop-context';
-import './shop.css'
+import './Shop.css'
 
 const Products = () => {
   const { products, isLoading, error } = useContext(ShopContext); 

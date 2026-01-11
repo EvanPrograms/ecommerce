@@ -64,6 +64,13 @@ const SignUp = () => {
             <ErrorMessage name="password" component="div" className="error" />
           </div>
           <button type="submit">Create user</button>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => navigate('/login')}
+          >
+            Back to Sign In
+          </button>
         </Form>
       </Formik>
     </div>

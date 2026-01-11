@@ -2,11 +2,13 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
 import { FORGOT_PASSWORD } from "../../../graphql/mutations";
 import './resetpassword.css';
 
 const ResetPassword = () => {
   const [forgotPassword, { data, loading, error }] = useMutation(FORGOT_PASSWORD);
+  const navigate = useNavigate();
 
   const signUpValidationSchema = Yup.object({
     email: Yup.string().email('invalid email').required('Email is required'),
@@ -35,6 +37,13 @@ const ResetPassword = () => {
             <ErrorMessage name="email" component="div" className="error" />
           </div>
           <button type="submit">Send Email</button>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => navigate('/login')}
+          >
+            Back to Sign In
+          </button>
         </Form>
       </Formik>
     </div>

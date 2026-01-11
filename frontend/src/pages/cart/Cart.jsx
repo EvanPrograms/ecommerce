@@ -54,7 +54,7 @@ const Cart = () => {
       {totalAmount > 0 ? (
         <div className="checkout">
           <p> Subtotal: ${(totalAmount/100).toFixed(2)}</p>
-          <p>!Use Credit Card Number "4242 4242 4242 4242" for Testing a 'valid' Credit Card!</p>
+          <p><em>Use Credit Card Number "4242 4242 4242 4242" for Testing a 'valid' Credit Card!</em></p>
           <button onClick={() => navigate('/shop')}>Continue Shopping</button>
           <button onClick={handleCheckout}>Checkout</button>
         </div>

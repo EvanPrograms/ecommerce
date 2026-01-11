@@ -18,6 +18,7 @@ const Navbar = () => {
 
   return (
     <AppBar
+      className="navbar"
       position="fixed"
       sx={{
         background: 'linear-gradient(45deg, #e20000, #9b111e)',

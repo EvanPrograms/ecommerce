@@ -1,0 +1,20 @@
+# fly.toml app configuration file generated for ecommerce-chocolate-machines on 2025-04-03T03:35:13-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'ecommerce-chocolate-machines'
+primary_region = 'den'
+
+[build]
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  size = 'shared-cpu-1x'

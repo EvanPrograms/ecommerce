@@ -6,7 +6,6 @@
   padding: 40px;
   min-height: 100vh;
   background-color: #fafafa;
-  margin-top: 20px
 }
 
 .auth-page h1 {
@@ -29,4 +28,14 @@
 
 .auth-page button:hover {
   background-color: #7f2d0b; 
+}
+
+@media (max-width: 600px) {
+  .auth-page {
+    padding: 20px 14px;
+  }
+
+  .auth-page h1 {
+    font-size: 1.8rem;
+  }
 }
