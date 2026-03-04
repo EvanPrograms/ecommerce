@@ -71,7 +71,7 @@ resource "aws_iam_role_policy" "s3_access" {
   })
 }
 
-# EC2 instance to host your backend
+# EC2 instance to host your backend and PostgreSQL
 resource "aws_instance" "backend_server" {
   ami           = "ami-088d38b423bff245f" # Use a Node.js-ready AMI
   instance_type = "t2.micro"
@@ -80,9 +80,14 @@ resource "aws_instance" "backend_server" {
   user_data = <<-EOF
     #!/bin/bash
     apt-get update -y
-    apt-get install -y nodejs npm
+    apt-get install -y nodejs npm postgresql postgresql-contrib
+    systemctl start postgresql
+    systemctl enable postgresql
+    sudo -u postgres psql -c "ALTER USER postgres PASSWORD '${var.postgres_password}';" 2>/dev/null || true
+    sudo -u postgres psql -c "CREATE DATABASE chocolate_shop;" 2>/dev/null || true
     cd /home/ubuntu
     git clone https://github.com/EvanPrograms/ecommerce.git
+    [ -f /home/ubuntu/ecommerce/chocolate_shop_backup.sql ] && sudo -u postgres psql -d chocolate_shop -f /home/ubuntu/ecommerce/chocolate_shop_backup.sql 2>/dev/null || true
     cd ecommerce/backend
     npm install
     npm start
@@ -104,57 +109,6 @@ output "backend_server_ip" {
   value = aws_instance.backend_server.public_ip
 }
 
-
-# Create a PostgreSQL RDS instance
-resource "aws_db_instance" "postgres" {
-  allocated_storage    = 20
-  engine               = "postgres"
-  engine_version       = "13.11" # Choose a version based on your needs
-  instance_class       = "db.t3.micro" # Free tier eligible
-  db_name              = "chocolate_shop" # Database name
-  username             = "postgres" # Master username
-  password             = var.postgres_password
-  publicly_accessible  = true # Set to true for testing, restrict later in production
-  skip_final_snapshot  = true
-  multi_az             = false
-  vpc_security_group_ids = [aws_security_group.postgres_sg.id]
-
-  tags = {
-    Name        = "PostgreSQL Database"
-    Environment = "production"
-  }
-}
-
-# Security group to allow database access
-resource "aws_security_group" "postgres_sg" {
-  name        = "postgres-sg"
-  description = "Allow access to PostgreSQL"
-
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Replace with specific IPs for production
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name        = "PostgreSQL Security Group"
-    Environment = "production"
-  }
-}
-
-# Output the RDS endpoint
-output "rds_endpoint" {
-  value = aws_db_instance.postgres.endpoint
-  description = "PostgreSQL RDS Endpoint"
-}
 
 resource "aws_eip" "backend_eip" {
   instance = aws_instance.backend_server.id
